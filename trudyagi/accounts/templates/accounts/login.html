@@ -1,0 +1,34 @@
+{% extends 'posts/base.html' %}
+
+{% block content %}
+<div class="authetication">
+    <div class="authentication_tabs">
+        <div class="auth_navigation">
+            <div class="auth_tab">
+                <a href="{% url 'accounts:register' %}">Регистрация</a>
+            </div>
+            <div class="auth_tab auth_tab_active">
+                <a href="{% url 'accounts:login' %}">Вход</a>
+            </div>
+        </div>
+        <div class="tab_content register_tab">
+            <div class="form_header">
+                <h1>Вход</h1>
+            </div>
+            {% if form.errors %}
+            <div class="form_error_list">
+                {{ form.errors }}
+            </div>
+            {% endif %}
+            <form id="register_form" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% for item in form %}
+                <label>{{ item.label }}</label><br>
+                {{ item }}<br>
+                {% endfor %}
+                <button id="register_btn">Вход</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

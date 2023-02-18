@@ -1,0 +1,2 @@
+Для завершения активации перейдите по этой ссылке
+{{ host }}{% url 'accounts:activation_page' sign=sign %}

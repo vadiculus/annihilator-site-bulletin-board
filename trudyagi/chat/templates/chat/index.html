@@ -1,0 +1,28 @@
+{% extends 'chat/base_chat.html' %}
+{% load static %}
+
+{% block content %}
+<div class="chat_app_conteiner">
+    <aside class="chats_menu">
+        <div class="top_menu">
+            <div class="logo">
+                <a href="{% url 'posts:index' %}">Annihilator CHAT</a>
+            <img width="35" src="{% static 'posts/img/logo.png' %}">
+        </div>
+        <div class="chats_menu_conteiner">
+        </div>
+    </aside>
+    <div class="chat_dialog_conteiner">
+        <div class="chat_dialog_messages_conteiner">
+            <div class="message_view">
+                <div class="message_view_author">Хуй</div>
+                <div class="message_view_text">фцафцаофциафцаио</div>
+            </div>
+        </div>
+        <div class="chat_message_form">
+            <input id="message_text_input" type="text">
+            <button id="message_btn" type="button">Отправить</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

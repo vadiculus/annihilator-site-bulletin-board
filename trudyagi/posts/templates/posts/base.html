@@ -1,0 +1,96 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width">
+    <title>Title</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Staatliches&family=Ubuntu:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet"  type="text/css" href="{% static 'posts/css/style.css' %}">
+</head>
+<body>
+	<header>
+		<div class="conteiner">
+			<div class="header__inner">
+				<div class="top_menu">
+					<div class="logo">
+						<a href="{% url 'posts:index' %}">Annihilator</a>
+						<img width="35" src="{% static 'posts/img/logo.png' %}">
+					</div>
+					<div class="search_conteiner">
+						<div class="search_box">
+							<input id="search_input" type="text">
+							<div class="search_list_conteiner" id="search_list_conteiner">
+								<ul id="search_list">
+								</ul>
+							</div>
+						</div>
+						<button id="search_btn">
+							<img width="60%" src="{% static 'posts/img/search-icon.png' %}">
+						</button>
+					</div>
+					{% if user.is_authenticated %}
+					<div class="account__nav">
+						<div class="nav_img_icon message_icon">
+							<a href="{% url 'cart:requests_to_order' %}">
+								<img width="30" src="{% static 'posts/img/mail-icon.png' %}">
+							</a>
+							<div class="count_text count_message">
+								{{ request.new_messages_count }}
+							</div>
+						</div>
+						<div class="nav_img_icon message_icon">
+							<a href="{% url 'cart:cart' %}">
+								<img width="30" src="{% static 'posts/img/cart.png' %}">
+							</a>
+							<div class="count_text count_message">
+								{{ request.cart.get_total_quantity }}
+							</div>
+						</div>
+						<a href="{% url 'accounts:logout' %}">Выход</a>
+						<a href="{% url 'accounts:profile' user.username %}"><div style="height: 30px;
+						width: 30px;background:url(
+						{% if user.icon %}
+							{{ user.icon.url }}
+						{% else%}
+							{% static 'posts/img/user-icon.png' %}
+						{% endif %}) center;
+						background-size: 100%;" class="profile_image"></div></a>
+					</div>
+					{% else %}
+					<div class="account__nav">
+						<a href="{% url 'accounts:login' %}">Войти</a>
+						<a href="{% url 'accounts:register' %}">Регистрация</a>
+					</div>
+					{% endif %}
+				</div>
+				<div class="bottom_menu">
+					<nav class="header__navigation">
+						{% for rubric in rubrics %}
+						<a href="{% url 'posts:rubrics' rubric.slug %}">{{ rubric }}</a>
+						{% endfor %}
+					</nav>
+				</div>
+			</div>
+		</div>
+	</header>
+	<div class="messages" id="messages">
+		<ul>
+			{% for message in messages %}
+			<li>{{ message }}</li>
+			{% endfor %}
+		</ul>
+	</div>
+	<main>
+		<div class="conteiner">
+			<div class="main__inner">
+				{% block content %}
+				{% endblock %}
+			</div>
+		</div>
+	</main>
+	<script src="{% static 'posts/js/script.js' %}"></script>
+</body>
+</html>

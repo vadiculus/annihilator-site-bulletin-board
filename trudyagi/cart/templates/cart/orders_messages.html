@@ -1,0 +1,57 @@
+{% extends 'posts/base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="section">
+    <div class="name_section">
+        <h2>Запросы на заказ</h2>
+    </div>
+    <div class="section_content">
+        <div class="cart_content_conteiner">
+            <div class="left_direction">
+                <div class="products_conteiner">
+                    {% for product in orders %}
+                    <div class="product_cart_icon">
+                        <div class="product_cart_icon__content">
+                            <a href="">
+                                <div class="product_image_place">
+                                    <img class="convenient_picture" src="{{ product.product.image.url }}">
+                                </div>
+                                <div class="product_icon_name">
+                                    <span>{{ product.product.name }}</span>
+                                </div>
+                            </a>
+                            <div class="product_icon_order_info">
+                                <div class="order_author_link">
+                                    <a href="{% url 'accounts:profile' user.username %}">
+                                        <div style="height: 30px;
+                            width: 30px;background:url(
+                            {% if user.icon %}
+                                {{ product.author.icon.url }}
+                            {% else%}
+                                {% static 'posts/img/user-icon.png' %}
+                            {% endif %}) center;
+                            background-size: 100%;" class="profile_image"></div>
+                                        <span>
+                                            {{ product.author.username }}
+                                        </span>
+                                    </a>
+                                </div>
+                                <p>Имя: {{ product.first_name }} {{ product.last_name }}</p>
+                                <p>
+                                    Адрес: {{ product.country }}, {{ product.city }},
+                                    {{ product.address }}, {{ product.postal_code }}
+                                </p>
+                                <p>Количество: {{ product.quantity }}</p>
+                                <p>Количество: {{ product.quantity }}</p>
+                                <b>Общая цена: {{ product.total_price }}$</b>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

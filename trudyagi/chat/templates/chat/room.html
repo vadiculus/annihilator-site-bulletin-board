@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'chat/css/style-room.css' %}">
+</head>
+<body>
+    <div class="chat">
+        <div class="chat_dialog">
+            <div class="message">
+                <span id="author_name">Vadim</span>
+                <div class="message_content">
+                    Вадим моледец
+                </div>
+            </div>
+            </div>
+        </div>
+        <div class="chat_input_container">
+            <div class="chat_input_container_inner">
+                <label>Текст: </label><input id="chat_input" type="text">
+                <button id="send_message">Send</button>
+            </div>
+        </div>
+    </div>
+    {{ room_name|json_script:"room-name" }}
+    <script type="text/javascript" 
+    src="{% static 'chat/js/script-room.js' %}"></script>
+</body>
+</html>

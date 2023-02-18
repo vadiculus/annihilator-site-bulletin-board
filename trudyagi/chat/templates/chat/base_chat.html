@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width">
+    <title>Title</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Staatliches&family=Ubuntu:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet"  type="text/css" href="{% static 'posts/css/style.css' %}">
+</head>
+<body>
+	<div class="messages" id="messages">
+		<ul>
+			{% for message in messages %}
+			<li>{{ message }}</li>
+			{% endfor %}
+		</ul>
+	</div>
+	<main class="main__chat">
+		<div class="conteiner">
+			<div class="main__inner">
+				{% block content %}
+				{% endblock %}
+			</div>
+		</div>
+	</main>
+	<script src="{% static 'chat/js/chat_script.js' %}"></script>
+</body>
+</html>

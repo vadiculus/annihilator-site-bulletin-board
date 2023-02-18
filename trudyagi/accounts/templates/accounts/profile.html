@@ -1,0 +1,53 @@
+{% extends 'posts/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="profile_conteiner">
+    <div class="profile_image">
+        <div style="height: 150px;
+            width: 150px;background:url(
+            {% if profile_user.icon %}
+               {{ profile_user.icon.url }}
+            {% else %}
+                {% static 'posts/img/user-icon.png' %}
+            {% endif %}
+            ) center;
+            background-size: 100%;" class="profile_image">
+        </div>
+    </div>
+    <div class="profile_name">
+        <h1>{{ profile_user.first_name }} {{ profile_user.last_name }}</h1>
+    </div>
+</div>
+<section class="section">
+    <div class="name_section">
+        <h2>Объявления</h2>
+    </div>
+    <div class="section_content">
+        {% if user == profile_user %}
+        <div class="product_any_info_conteiner">
+            <a href="{% url 'posts:add-product' %}" class="blue_btn">Добавить продукт</a>
+        </div>
+        {% endif %}
+        <div class="products_conteiner">
+            {% for product in profile_user.products.all %}
+            <div class="product_icon">
+                <div class="product_icon__content">
+                    <a href="{{ product.get_absolute_url }}">
+                        <div class="product_image_place">
+                            <img class="convenient_picture" src="{{ product.image.url }}">
+                        </div>
+                        <div class="product_icon_name">
+                            <span>{{ product.name }}</span>
+                        </div>
+                    </a>
+                    <div class="product_icon_price">
+                        <b>{{ product.price }}$</b>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

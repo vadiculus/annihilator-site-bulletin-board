@@ -1,0 +1,62 @@
+{% extends 'posts/base.html' %}
+
+{% block content %}
+<section class="section">
+    <div class="name_section">
+        <h2>Корзина</h2>
+    </div>
+    <div class="section_content">
+        <div class="cart_content_conteiner">
+            <div class="left_direction">
+                <div class="products_conteiner">
+                    {% for product in cart %}
+                    <div class="product_cart_icon">
+                        <div class="product_cart_icon__content">
+                            <a href="">
+                                <div class="product_image_place">
+                                    <img class="convenient_picture" src="{{ product.product.image.url }}">
+                                </div>
+                                <div class="product_icon_name">
+                                    <span>{{ product.product.name }}</span>
+                                </div>
+                            </a>
+                            <div class="product_icon_price">
+                                <p>Количество: {{ product.quantity }}</p>
+                                <b>Общая цена: {{ product.total_price }}$</b>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="right_direction">
+                <div class="white_back_block">
+                    <div class="total_cart_conteiner">
+                        <div class="total_cart_info">
+                            <div class="total_products_info">
+                                <div class="total_cart_option">
+                                    <div class="name_option">
+                                        <p>Количество продуктов:</p>
+                                    </div>
+                                    <div class="value_option">
+                                        <b>{{ cart.get_total_quantity }}</b>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="total_cart_price">
+                                    <h2>Итог: {{ cart.get_total_price }}$</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="send_application_conteiner">
+                            <a href="{% url 'cart:create_order' %}" class="blue_btn" id="send_purchase_request">
+                                Отправить заявку
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,140 @@
+{% extends 'posts/base.html' %}
+{% load static %}
+
+{% block content %}
+<div id="removal_question">
+    <div class="question_content">
+        <div class="question_text">
+            Вы точно хотите удалить отзыв?
+        </div>
+        <div class="question_btns">
+            <div class="blue_btn" id="question_review_delete_yes">
+                Да
+            </div>
+            <div class="red_btn" id="question_review_delete_no">
+                Нет
+            </div>
+        </div>
+    </div>
+</div>
+<div class="product-detail">
+    <div class="main_product_info">
+        <div class="column_conteiner">
+            <div class="product_any_info_conteiner">
+                <div class="foto_slider_conteiner">
+                    <div class="slider_canvas">
+                        <button class="slider_button" id="left-slider-btn"><</button>
+                        <button class="slider_button" id="right-slider-btn"> ></button>
+                    </div>
+                    <div class="foto_slider" id="foto-slider">
+                        <div class="product_big_image">
+                            <img class="convenient_picture"  src="{{ product.image.url }}">
+                        </div>
+                        {% for image in product.product_image_set.all %}
+                        <div class="product_big_image">
+                            <img class="convenient_picture" src="{{ image.image.url }}">
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="product_any_info_conteiner">
+                <div class="product_info">
+                    <span>Было выставлено: {{ product.created }}</span>
+                    <br>
+<!--                    <div class="product_rating">-->
+<!--                        {% if product.rating %}-->
+<!--                        <div class="star_rating">-->
+<!--                            {{ product.rating }}-->
+<!--                        </div>-->
+<!--                        {% else %}-->
+<!--                        <span class="no_ration">Нету оценок</span>-->
+<!--                        {% endif %}-->
+<!--                    </div>-->
+                    <h2>{{ product.name }}</h2>
+                    <h1>{{ product.price }}$</h1>
+                    <hr>
+                    <div class="product_about">
+                        <p>{{ product.about }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="product_any_info_conteiner">
+                <h2>Отзывы:</h2>
+                <div class="create_review_conteiner">
+                    <form class="review_form" id="review_form" method="post">
+                        {% csrf_token %}
+                        {{ review_form }}
+                        <div id="review_btn" class="blue_btn">Отправить отзыв</div>
+                    </form>
+                </div>
+                <div class="reviews_conteiner">
+                    <div class="reviews_list">
+                        {% for review in product.reviews.all %}
+                        <div class="review_view" {% if review.author == user %} id="this_author_review" {% endif %}>
+                            <div class="review_author">
+                                {{ review.author.first_name }} {{ review.author.last_name }}
+                            </div>
+                            <br>
+                            Отзыв:
+                            <div class="review_view_content">
+                                <p>{{ review.content }}</p>
+                            </div>
+                            <div class="review_actions">
+                                {% if review.author == user %}
+                                <a class="delete_review_btn" data-delete_href="{% url 'posts:delete_review' review.pk %}">
+                                    <img width="30" src="{% static 'posts/img/trash.png' %}">
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="column_conteiner">
+            <div class="product_any_info_conteiner">
+                <div class="product_about_author">
+                    <h3>Автор поста</h3>
+                    <br>
+                    <div class="product_author_main_info">
+                        <a href="{% url 'accounts:profile' product.author.username %}">
+                            <div class="product_author_main_info">
+                                <div style="height: 50px;
+                                    width: 50px;background:url(
+                                    {% if product.author.icon %}
+                                        {{ product.author.icon.url }}
+                                    {% else%}
+                                        {% static 'posts/img/user-icon.png' %}
+                                    {% endif %}) center;
+                                    background-size: 100%;" class="profile_image">
+                                </div>
+                                <div class="product_author_name">
+                                    <h2>{{ product.author.first_name }} {{ product.author.last_name }}</h2>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <br>
+                    <div class="author_contact_info">
+                        Свяжитесь с продавцом:<br>
+                        <b>{{ product.author.contacts }}</b>
+                    </div>
+                </div>
+            </div>
+            <div class="product_any_info_conteiner">
+                <div class="buy_product_content">
+                    <form action="{% url 'cart:cart_add' product.id %}" method="post">
+                        {% csrf_token %}
+                        {{ cart_form }}
+                        <button class="blue_btn">Добавить в корзину</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{% static 'posts/js/script_detail_project.js' %}"></script>
+{{ product.rating|json_script:'product-rating-data' }}
+{% endblock %}
