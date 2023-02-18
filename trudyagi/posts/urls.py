@@ -11,4 +11,6 @@ urlpatterns = [
     path('search-product-data/', views.search_product_data, name='search_product_data'),
     path('search-product/', views.search_product, name='search_product'),
     path('delete-review/<int:review_id>', views.delete_review, name='delete_review'),
+    path('delete-product/<uuid:pk>', views.DeleteProductView.as_view(), name='delete_product'),
+    path('update-product/<uuid:pk>', views.UpdateProductView.as_view(), name='update_product'),
 ]

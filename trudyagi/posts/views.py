@@ -1,4 +1,5 @@
 import requests
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
@@ -6,7 +7,7 @@ from django.views.generic.edit import FormMixin
 
 from .models import Rubric, Product, Product_Image, Review
 from django.contrib.auth.forms import UserCreationForm
-from django.views.generic import CreateView, FormView, DeleteView
+from django.views.generic import CreateView, FormView, DeleteView, UpdateView
 from .forms import CreateProductForm, CreateReviewForm
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import get_object_or_404
@@ -14,6 +15,8 @@ from django.http import JsonResponse
 from django.template.loader import render_to_string
 from cart.cart import Cart
 from cart.forms import ProductAddInCartFrom
+from django.contrib import messages
+from django.shortcuts import redirect
 
 def index(request):
     rubrics = Rubric.objects.all()
@@ -96,3 +99,37 @@ def delete_review(request, review_id):
     if review.author == request.user:
         review.delete()
         return JsonResponse({'action':'success_deleted'})
+
+class DeleteProductView(DeleteView):
+    model = Product
+    success_url = reverse_lazy('posts:index')
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object.author == self.request.user:
+            return super().get()
+        else:
+            return redirect('posts:index')
+
+class UpdateProductView(UpdateView):
+    model = Product
+    form_class = CreateProductForm
+    template_name = 'posts/update_product.html'
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object.author == self.request.user:
+            return super().get()
+        else:
+            return redirect('posts:index')
+
+    def get_success_url(self):
+        return reverse('posts:product_detail', args=[self.get_object().id])
+
+    def form_valid(self, form):
+        product = form.save(commit=False)
+        product.author = self.request.user
+        self.object = product.save()
+        for image in self.request.FILES.getlist('images'):
+            Product_Image.objects.create(product=product, image=image)
+        return HttpResponseRedirect(self.get_success_url())

@@ -46,6 +46,7 @@ main .conteiner{
 
 .main__inner{
 	height: 100%;
+	padding-top: 20px;
 }
 
 .top_menu{
@@ -133,7 +134,7 @@ main .conteiner{
 	border: none;
 }
 
-.authentication_tabs{
+.page_form_tabs{
 	width: 400px;
 	margin: auto;
 	display: flex;

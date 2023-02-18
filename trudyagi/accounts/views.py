@@ -14,6 +14,7 @@ from django.contrib import messages
 from .utilites import signer
 from django.contrib.auth.views import PasswordChangeView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from .tasks import send_activation_email_task
 
 class RegisterView(CreateView):
     form_class = RegistrationForm
@@ -58,4 +59,7 @@ def activation_warning_view(request):
 class ChangePasswordView(LoginRequiredMixin, PasswordChangeView):
     template_name = 'accounts/change_password.html'
     success_url = reverse_lazy('posts:index')
+
+def resend_activation():
+    send_activation_email_task.delay()
 

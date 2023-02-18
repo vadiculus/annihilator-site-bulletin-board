@@ -3,7 +3,7 @@ from .models import Product, Review
 from django.utils.text import slugify
 
 class CreateProductForm(forms.ModelForm):
-    images = forms.FileField(widget=forms.FileInput(attrs={'multiple': True}))
+    images = forms.FileField(required=False, widget=forms.FileInput(attrs={'multiple': True}))
 
     class Meta:
         model = Product

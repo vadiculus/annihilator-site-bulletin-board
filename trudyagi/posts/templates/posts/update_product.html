@@ -7,6 +7,11 @@
             <div class="form_header">
                 <h1>Добавить продукт</h1>
             </div>
+            <label>
+                {% for image in object.product_image_set.all %}
+                <img width="50" src="{{ image.image.url }}">
+                {% endfor %}
+            </label>
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {% for item in form %}

@@ -2,6 +2,19 @@
 {% load static %}
 
 {% block content %}
+{% if product.author == user %}
+<div class="white_back_block">
+    <h3>Изменение вашего товара:</h3>
+    <form method="post" action="{% url 'posts:delete_product' product.id %}">
+        {% csrf_token %}
+        <button type="submit">Удалить</button>
+    </form>
+    <form method="get" action="{% url 'posts:update_product' product.id %}">
+        {% csrf_token %}
+        <button type="submit">Редактировать</button>
+    </form>
+</div>
+{% endif %}
 <div id="removal_question">
     <div class="question_content">
         <div class="question_text">

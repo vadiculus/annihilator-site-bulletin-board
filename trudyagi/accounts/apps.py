@@ -5,8 +5,8 @@ from .tasks import send_activation_email_task
 register_signal = Signal()
 
 def register_dipatcher(sender, **kwargs):
-    print(kwargs['instance'].id)
-    send_activation_email_task.delay(kwargs['instance'].id)
+    print(kwargs['instance'].email)
+    send_activation_email_task.delay(kwargs['instance'].email, kwargs['instance'].username)
 
 register_signal.connect(register_dipatcher)
 

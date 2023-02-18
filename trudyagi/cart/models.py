@@ -3,9 +3,9 @@ from posts.models import Product
 from accounts.models import User
 
 class Order(models.Model):
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author_orders', verbose_name='Отправитель')
-    seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name='seller_orders', verbose_name='Продавец')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_orders', verbose_name='Продукт')
+    author = models.ForeignKey(User, on_delete=models.PROTECT, related_name='author_orders', verbose_name='Отправитель')
+    seller = models.ForeignKey(User, on_delete=models.PROTECT, related_name='seller_orders', verbose_name='Продавец')
+    product = models.ForeignKey(Product, on_delete=models.PROTECT, related_name='product_orders', verbose_name='Продукт')
     first_name = models.CharField(max_length=50, verbose_name='Имя')
     last_name = models.CharField(max_length=50, verbose_name='Фамилия')
     country = models.CharField(max_length=200, verbose_name='Страна')
