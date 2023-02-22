@@ -1,4 +1,4 @@
-{% extends 'posts/base.html' %}
+{% extends 'posts/base_detail.html' %}
 {% load static %}
 
 {% block content %}
@@ -78,7 +78,7 @@
                     <form class="review_form" id="review_form" method="post">
                         {% csrf_token %}
                         {{ review_form }}
-                        <div id="review_btn" class="blue_btn">Отправить отзыв</div>
+                        <button type="submit" id="review_btn" class="blue_btn">Отправить отзыв</button>
                     </form>
                 </div>
                 <div class="reviews_conteiner">

@@ -7,11 +7,23 @@ from django.urls import reverse
 import uuid
 
 class Product(models.Model):
+    PRODUCT_CONDITION_CHOICE = (
+        ('n', 'Новый'),
+        ('u', 'Б/у'),
+    )
+    SALE_TYPE_CHOICE  = (
+        ('s', 'Продажа'),
+        ('e', 'Обмен'),
+        ('f', 'Даром')
+    )
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4(), editable=False)
     name = models.CharField(max_length=70, verbose_name='Имя продукта')
     image = models.ImageField(upload_to='products-images/%Y/%m/%d', verbose_name='Изображение продукта')
     about = models.TextField(null=True, blank=True, verbose_name='О продукте')
-    price = models.DecimalField(max_digits=8,decimal_places=2, verbose_name='Цена')
+    condition = models.CharField(max_length=5, default='n', choices=PRODUCT_CONDITION_CHOICE, verbose_name='Состояние товара')
+    sale_type = models.CharField(max_length=5, default='s', choices=SALE_TYPE_CHOICE, verbose_name='Тип продажи')
+    price = models.DecimalField(null=True,max_digits=8,decimal_places=2, verbose_name='Цена')
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор', related_name='products')
     category = models.ForeignKey('Category', null=True, on_delete=models.PROTECT, verbose_name='Категория', related_name='products')
     rating = models.FloatField(null=True, blank=True)

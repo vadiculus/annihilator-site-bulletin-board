@@ -58,17 +58,17 @@ def product(request, product_unique_id):
 
     cart_form = ProductAddInCartFrom()
     if request.method == 'POST':
-        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-            form = CreateReviewForm(request.POST)
-            print(request.POST)
-            if form.is_valid():
-                errors = None
-                if request.user:
+        form = CreateReviewForm(request.POST)
+        print(request.POST)
+        if form.is_valid():
+            errors = None
+            if request.user:
+                if not Review.objects.filter(author=request.user):
                     review = form.save(commit=False)
                     review.author = request.user
                     review.product = product
                     review.save()
-            return JsonResponse({'action':'success_review_form'})
+        return HttpResponseRedirect(reverse('posts:product_detail', args=[product_unique_id]))
     elif request.method == 'GET':
         rubrics = Rubric.objects.all()
         return render(request, 'posts/detail-product.html', {'rubrics':rubrics,'product':product,
@@ -81,16 +81,16 @@ def search_product_data(request):
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             search_products = Product.objects.filter(name__icontains=request.POST.get('search_data'))
             if search_products:
-                return JsonResponse({'search_data': [(prod.name, prod.get_absolute_url()) for prod in list(search_products)]})
+                return JsonResponse({'search_data': [prod.name for prod in list(search_products)]})
             else:
                 return JsonResponse({'search_data': False})
     else:
         return HttpResponseRedirect(reverse('posts:index'))
 
-def search_product(request, product_name):
-    products = Product.objects.filter(name__icontains=request.POST.get('search_data'))
+def search_product(request):
+    products = Product.objects.filter(name__icontains=request.GET.get('search_data'))
     rubrics = Rubric.objects.all()
-    return render(request, 'posts/index.html', {'rubrics': rubrics,
+    return render(request, 'posts/search_product.html', {'rubrics': rubrics,
                                                 'products': products})
 
 @csrf_exempt
@@ -119,9 +119,12 @@ class UpdateProductView(UpdateView):
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         if self.object.author == self.request.user:
-            return super().get()
+            return super().get(request, *args, **kwargs)
         else:
             return redirect('posts:index')
+
+    def get_context_data(self, **kwargs):
+        return super().get_context_data()
 
     def get_success_url(self):
         return reverse('posts:product_detail', args=[self.get_object().id])

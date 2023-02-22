@@ -42,29 +42,11 @@ window.addEventListener('DOMContentLoaded', function(){
         slider.style.transform = `translateX(-${slider.children[0].clientWidth * foto_count}px)`;
     }
 
-    review_btn.onclick = function(){
-        if (review_form.content.value.length >= 3){
-            const review_ajax = new XMLHttpRequest();
-            review_ajax.open('POST', window.location.href)
-            review_ajax.setRequestHeader('x-requested-with', 'XMLHttpRequest');
-            review_ajax.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            review_ajax.setRequestHeader('X-CSRFToken', getCookie('csrftoken'));
-            const review_data = `review=${review_form.review.value}&content=${review_form.content.value}`;
-            console.log(review_data);
-            review_ajax.onreadystatechange = function(){
-                if (this.readyState != 4){
-                    return;
-                }
-                console.log(this.response)
-            }
-            review_ajax.send(review_data);
-        }
-    }
-
-    document.querySelector('.delete_review_btn').addEventListener('click', function(){
-        const removal_question = document.getElementById('removal_question');
-        console.log(removal_question);
-        removal_question.style.display = 'block';
+    document.getElementsByClassName('delete_review_btn').forEach(element => {
+        element.addEventListener('click', function(){
+            const removal_question = document.getElementById('removal_question');
+            removal_question.style.display = 'block';
+        })
     })
     
     this.document.getElementById('question_review_delete_yes').addEventListener('click', function(){

@@ -19,20 +19,18 @@
 						<a href="{% url 'posts:index' %}">Annihilator</a>
 						<img width="35" src="{% static 'posts/img/logo.png' %}">
 					</div>
-					<form method="get" action="{% url 'posts:search_product' %}">
-						<div class="search_conteiner">
-							<div class="search_box">
-								<input name="search_data" id="search_input" type="text" value="{{ request.GET.search_data }}">
-								<div class="search_list_conteiner" id="search_list_conteiner">
-									<ul id="search_list">
-									</ul>
-								</div>
+					<div class="search_conteiner">
+						<div class="search_box">
+							<input name="search_data" id="search_input" type="text">
+							<div class="search_list_conteiner" id="search_list_conteiner">
+								<ul id="search_list">
+								</ul>
 							</div>
-							<button id="search_btn">
-								<img width="60%" src="{% static 'posts/img/search-icon.png' %}">
-							</button>
 						</div>
-					</form>
+						<button id="search_btn">
+							<img width="60%" src="{% static 'posts/img/search-icon.png' %}">
+						</button>
+					</div>
 					{% if user.is_authenticated %}
 					<div class="account__nav">
 						<div class="nav_img_icon message_icon">
@@ -67,13 +65,6 @@
 						<a href="{% url 'accounts:register' %}">Регистрация</a>
 					</div>
 					{% endif %}
-				</div>
-				<div class="bottom_menu">
-					<nav class="header__navigation">
-						{% for rubric in rubrics %}
-						<a href="{% url 'posts:rubrics' rubric.slug %}">{{ rubric }}</a>
-						{% endfor %}
-					</nav>
 				</div>
 			</div>
 		</div>

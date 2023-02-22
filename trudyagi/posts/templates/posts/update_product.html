@@ -1,26 +1,27 @@
-{% extends 'posts/base.html' %}
+{% extends 'posts/base_detail.html' %}
+{% load static %}
 
 {% block content %}
-<div class="page_form">
-    <div class="page_form_tabs">
-        <div class="tab_content register_tab">
-            <div class="form_header">
-                <h1>Добавить продукт</h1>
-            </div>
-            <label>
-                {% for image in object.product_image_set.all %}
-                <img width="50" src="{{ image.image.url }}">
-                {% endfor %}
-            </label>
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                {% for item in form %}
-                <label>{{ item.label }}</label><br>
-                {{ item }}<br>
-                {% endfor %}
-                <button type="submit" id="register_btn">Зарегистрироваться</button>
-            </form>
-        </div>
+<div class="create_product_conteiner">
+    <div class="form_header">
+        <h1>Обновить продукт</h1>
     </div>
+    <form method="post" enctype="multipart/form-data">
+        <h2>
+            Изображение продукта:
+        </h2>
+        <div class="product_add_image_conteiner">
+            <div id="image_conteiner" class="product_add_image_content">
+                <img id="product_image">
+            </div>
+        </div>
+        {% csrf_token %}
+        {% for item in form %}
+        <label>{{ item.label }}: </label><br>
+        {{ item }}<br>
+        {% endfor %}
+        <button type="submit" id="register_btn">Обновить продукт</button>
+    </form>
 </div>
+<script src="{% static 'posts/js/script_create_product.js' %}"></script>
 {% endblock %}

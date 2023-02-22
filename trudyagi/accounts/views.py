@@ -23,7 +23,7 @@ class RegisterView(CreateView):
     def form_valid(self, form):
         messages.add_message(self.request, messages.INFO , 'Вы успешно зерегестрировались! Теперь можете войти в аккаунт')
         self.object = form.save()
-        return HttpResponseRedirect(reverse('accounts:activation_warning'))
+        return HttpResponseRedirect(reverse('accounts:activation_warning', args=[signer.sign(self.object.username)]))
 
 class LoginUserView(LoginView):
     form_class = AuthenticationForm
@@ -53,13 +53,15 @@ def activation_user_view(request, sign):
     user.save()
     return render(request,'accounts/success_activation.html', {})
 
-def activation_warning_view(request):
-    return render(request, 'accounts/activation_warning.html', {})
+def activation_warning_view(request, sign):
+    return render(request, 'accounts/activation_warning.html', {'sign':sign})
 
 class ChangePasswordView(LoginRequiredMixin, PasswordChangeView):
     template_name = 'accounts/change_password.html'
     success_url = reverse_lazy('posts:index')
 
-def resend_activation():
-    send_activation_email_task.delay()
+def resend_activation(request, sign):
+    user = User.objects.get(username=signer.unsign(sign))
+    send_activation_email_task.delay(user.email, user.username)
+    return HttpResponseRedirect(reverse('accounts:activation_warning', args=[sign]))
 

@@ -9,7 +9,6 @@ window.addEventListener('DOMContentLoaded', function(){
     let ajax_call_timeout;
 
     if (messages.children[0].children.length > 0){
-        console.log('bebraaaa');
         messages.style.top = '15px';
         this.setTimeout(()=>{
             messages.style.top = '-100%';
@@ -49,8 +48,8 @@ window.addEventListener('DOMContentLoaded', function(){
                 search_list_conteiner.classList.add('active');
                 response['search_data'].forEach(element => {
                 let search_element =document.createElement('a')
-                search_element.innerText = element[0];
-                search_element.href = 'http://' + window.location.host + element[1];
+                search_element.innerText = element;
+                search_element.href = 'http://' + window.location.host + '/search-product/?search_data=' + element;
                 search_list.appendChild(search_element);
                 });
             } else {

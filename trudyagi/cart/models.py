@@ -12,6 +12,7 @@ class Order(models.Model):
     city = models.CharField(max_length=200, verbose_name='Город')
     address = models.CharField(max_length=200, verbose_name='Адрес')
     postal_code = models.CharField(max_length=20, verbose_name='Почтовый индекс')
+    additional_information = models.TextField(null=True, blank=True, verbose_name='Дополнительная информация')
     read = models.BooleanField(default=False, verbose_name='Прочитано')
     created = models.DateTimeField(auto_now_add=True)
     quantity = models.IntegerField(verbose_name='Количество')

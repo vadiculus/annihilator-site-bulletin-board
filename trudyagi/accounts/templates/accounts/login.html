@@ -1,4 +1,4 @@
-{% extends 'posts/base.html' %}
+{% extends 'posts/base_detail.html' %}
 
 {% block content %}
 <div class="page_form">
@@ -15,12 +15,12 @@
             <div class="form_header">
                 <h1>Вход</h1>
             </div>
-            {% if form.errors %}
-            <div class="form_error_list">
-                {{ form.errors }}
-            </div>
-            {% endif %}
             <form id="register_form" method="post" enctype="multipart/form-data">
+                {% if form.errors %}
+                    <div class="form_error_list">
+                        {{ form.errors }}
+                    </div>
+                {% endif %}
                 {% csrf_token %}
                 {% for item in form %}
                 <label>{{ item.label }}</label><br>
