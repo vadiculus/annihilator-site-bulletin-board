@@ -19,7 +19,13 @@
                         </div>
                     </a>
                     <div class="product_icon_price">
-                        <b>{{ product.price }}$</b>
+                        {% if product.sale_type == 's' %}
+                            <b>{{ product.price }}$</b>
+                        {% elif product.sale_type == 'f' %}
+                            <b>Даром</b>
+                        {% elif product.sale_type == 'e' %}
+                            <b>Обмен</b>
+                        {% endif %}
                     </div>
                 </div>
             </div>

@@ -65,7 +65,15 @@
 <!--                        {% endif %}-->
 <!--                    </div>-->
                     <h2>{{ product.name }}</h2>
-                    <h1>{{ product.price }}$</h1>
+                    <h1>
+                        {% if product.price %}
+                                {{ product.price }}$
+                            {% elif product.price == f %}
+                                Даром
+                            {% elif product.price == e %}
+                                Обмен
+                            {% endif %}
+                    </h1>
                     <hr>
                     <div class="product_about">
                         <p>{{ product.about }}</p>
@@ -140,8 +148,16 @@
                 <div class="buy_product_content">
                     <form action="{% url 'cart:cart_add' product.id %}" method="post">
                         {% csrf_token %}
-                        {{ cart_form }}
-                        <button class="blue_btn">Добавить в корзину</button>
+                        {% if product.sale_type == 's' %}
+                            {{ cart_form }}
+                            <button class="blue_btn">Добавить в корзину</button>
+                        {% elif product.sale_type == 'f' %}
+                            <input type="hidden" name="id_quantity" value="1">
+                            <button class="blue_btn">Добавить в корзину</button>
+                        {% elif product.sale_type == 'e' %}
+                            <input type="hidden" name="id_quantity" value="1">
+                            <button class="blue_btn">Предложить обмен</button>
+                        {% endif %}
                     </form>
                 </div>
             </div>

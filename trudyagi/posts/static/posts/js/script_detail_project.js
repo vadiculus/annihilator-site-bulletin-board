@@ -23,7 +23,6 @@ window.addEventListener('DOMContentLoaded', function(){
     }
 
     right_btn.onclick = function(){
-        console.log(slider.children[0].clientWidth * slider.children.length - 2);
         if (foto_count >= slider.children.length - 1){
             foto_count = 0;
         } else {
@@ -33,7 +32,6 @@ window.addEventListener('DOMContentLoaded', function(){
     }
 
     left_btn.onclick = function(){
-        console.log(slider.children[0].clientWidth * slider.children.length - 2);
         if (foto_count <= 0){
             foto_count = slider.children.length - 1;
         } else {
@@ -59,7 +57,6 @@ window.addEventListener('DOMContentLoaded', function(){
                 return;
             }
             response = JSON.parse(delete_ajax.response);
-            console.log(this.response);
             removal_question.style.display = 'none';
             document.getElementById('this_author_review').remove();
         };

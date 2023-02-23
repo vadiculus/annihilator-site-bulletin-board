@@ -4,8 +4,6 @@ window.addEventListener('DOMContentLoaded', function(){
     const search_list_conteiner = this.document.getElementById('search_list_conteiner');
     const search_list = this.document.getElementById('search_list');
     const ajax_timeout = 1000;
-    const review_btn = this.document.getElementById('')
-    console.log(messages.children[0].children > 0);
     let ajax_call_timeout;
 
     if (messages.children[0].children.length > 0){
@@ -37,7 +35,6 @@ window.addEventListener('DOMContentLoaded', function(){
         search_ajax.setRequestHeader('x-requested-with', 'XMLHttpRequest');
         search_ajax.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         search_data = `search_data=${value}`
-        console.log(search_data);
         search_ajax.onreadystatechange = function(data){
             if (this.readyState !== 4){
                 return;
@@ -56,7 +53,6 @@ window.addEventListener('DOMContentLoaded', function(){
                 search_list_conteiner.classList.remove('active');
             }
             search_response = data.data;
-            console.log(search_ajax.response);
         }
         search_ajax.send(search_data);
     }
@@ -65,10 +61,8 @@ window.addEventListener('DOMContentLoaded', function(){
         if (this.value.length >= 2){
             if (ajax_call_timeout){
                 clearTimeout(ajax_call_timeout);
-                console.log('не прошло 5 секунд');
             }    
             ajax_call_timeout = setTimeout(ajax_call, ajax_timeout, this.value);
-            console.log('send');
         } else {
             clearTimeout(ajax_call_timeout);
             search_list_conteiner.classList.remove('active')

@@ -639,10 +639,6 @@ main .conteiner{
 	box-sizing: border-box;
 }
 
-.create_product_conteiner form *{
-	margin-bottom: 10px; 
-}
-
 .create_product_conteiner form input{
 	padding: 5px;
 	background: #e5e5e5;
@@ -678,6 +674,28 @@ main .conteiner{
 	position: relative;
 	height: 100%;
 	max-width: 100%;
-	
 }
 
+#characteristics_table{
+	border: 1px solid grey;
+	display: inline-block;
+}
+
+#characteristics_table tr th{
+	padding: 5px;
+}
+
+.product_form{
+	display: flex;
+	flex-direction: column;
+}
+
+.product_form select{
+	padding: 5px;
+	border: 1px solid grey;
+	border-radius: none;
+}
+
+.product_form textarea{
+	max-width: 100%;
+}

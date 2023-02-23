@@ -26,7 +26,7 @@ def cart_add(request, product_id):
                  quantity=cd['quantity'],
                  update_quantity=cd['update'])
 
-        return HttpResponseRedirect(product.get_absolute_url())
+    return HttpResponseRedirect(product.get_absolute_url())
 
 def cart_remove(request, product_id):
     product = get_object_or_404(Product ,pk=product_id)
