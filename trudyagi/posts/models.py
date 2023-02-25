@@ -1,3 +1,4 @@
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.views.generic import CreateView
 
@@ -27,7 +28,7 @@ class Product(models.Model):
     characteristics = models.JSONField(null=True, blank=True,verbose_name='Характеристики')
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор', related_name='products')
     category = models.ForeignKey('Category', null=True, on_delete=models.PROTECT, verbose_name='Категория', related_name='products')
-    rating = models.FloatField(null=True, blank=True)
+    rating = models.FloatField(null=True, blank=True, verbose_name='Рейтинг', validators=[MaxValueValidator(5), MinValueValidator(0)])
     created = models.DateTimeField(auto_now_add=True, verbose_name='Добавлено')
 
     def __str__(self):
@@ -57,8 +58,15 @@ class Product_Image(models.Model):
 class Review(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Имя автора')
     content = models.TextField(verbose_name='Коомментарий')
-    review = models.FloatField(max_length=5, verbose_name='Отзыв')
+    review = models.FloatField(verbose_name='Отзыв', validators=[MaxValueValidator(5), MinValueValidator(0)])
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
+
+    def save(self, commit=True, *args, **kwargs):
+        if commit:
+            author_comments = self.__class__.objects.filter(author=self.author, product=self.product)
+        if author_comments:
+            author_comments.delete()
+        return super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Оценка'

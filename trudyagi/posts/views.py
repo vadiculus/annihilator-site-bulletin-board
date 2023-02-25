@@ -32,7 +32,6 @@ class CreateProductView(CreateView):
         return reverse('posts:index')
 
     def get_context_data(self, **kwargs):
-        print(kwargs)
         context = super().get_context_data(**kwargs)
         context['rubrics'] = Rubric.objects.all()
         return context
@@ -53,27 +52,27 @@ def get_by_rubric(request, rubric_slug):
 
 def product(request, product_unique_id):
     product = get_object_or_404(Product.objects.prefetch_related('reviews' ,'reviews__author'), pk=product_unique_id)
-
-    #Product.objects.prefetch_related('reviews' ,'reviews__author').get(slug=product_slug)
-
     cart_form = ProductAddInCartFrom()
+    characteristics = product.characteristics.items()
+
     if request.method == 'POST':
         form = CreateReviewForm(request.POST)
-        print(request.POST)
         if form.is_valid():
             errors = None
             if request.user:
-                if not Review.objects.filter(author=request.user):
-                    review = form.save(commit=False)
-                    review.author = request.user
-                    review.product = product
-                    review.save()
+                review = form.save(commit=False)
+                review.author = request.user
+                review.product = product
+                review.save()
+
         return HttpResponseRedirect(reverse('posts:product_detail', args=[product_unique_id]))
+
     elif request.method == 'GET':
         rubrics = Rubric.objects.all()
         return render(request, 'posts/detail-product.html', {'rubrics':rubrics,'product':product,
                                                             'review_form': CreateReviewForm,
-                                                            'cart_form':cart_form})
+                                                            'cart_form':cart_form,
+                                                             'characteristics':characteristics,})
 
 @csrf_exempt
 def search_product_data(request):
@@ -124,7 +123,8 @@ class UpdateProductView(UpdateView):
             return redirect('posts:index')
 
     def get_context_data(self, **kwargs):
-        return super().get_context_data()
+        kwargs['characteristics'] = self.object.characteristics.items()
+        return super().get_context_data(**kwargs)
 
     def get_success_url(self):
         return reverse('posts:product_detail', args=[self.get_object().id])

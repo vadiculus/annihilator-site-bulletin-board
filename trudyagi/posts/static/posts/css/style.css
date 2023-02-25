@@ -685,6 +685,13 @@ main .conteiner{
 	padding: 5px;
 }
 
+#characteristics_table tr td input{
+	border: 1px solid grey;
+	background: none;
+	border-radius: none;
+}
+
+
 .product_form{
 	display: flex;
 	flex-direction: column;
@@ -698,4 +705,19 @@ main .conteiner{
 
 .product_form textarea{
 	max-width: 100%;
+}
+
+.product_characteristics_table{
+	border: 1px solid grey;
+	border-collapse: collapse;
+	padding: 5px;
+}
+
+.product_characteristics_table tr th, td{
+	padding: 10px;
+	border: 1px solid grey;
+}
+
+.product_info *{
+	margin-bottom: 20px;
 }

@@ -19,3 +19,4 @@ class CreateReviewForm(forms.ModelForm):
     class Meta:
         model = Review
         fields = ['review','content']
+        validators = []

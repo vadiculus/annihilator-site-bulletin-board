@@ -40,11 +40,10 @@ window.addEventListener('DOMContentLoaded', function(){
         slider.style.transform = `translateX(-${slider.children[0].clientWidth * foto_count}px)`;
     }
 
-    document.getElementsByClassName('delete_review_btn').forEach(element => {
-        element.addEventListener('click', function(){
-            const removal_question = document.getElementById('removal_question');
-            removal_question.style.display = 'block';
-        })
+    document.querySelector('.delete_review_btn').addEventListener('click', function(){
+        const removal_question = document.getElementById('removal_question');
+        console.log(removal_question);
+        removal_question.style.display = 'block';
     })
     
     this.document.getElementById('question_review_delete_yes').addEventListener('click', function(){
