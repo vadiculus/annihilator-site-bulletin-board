@@ -1,14 +1,13 @@
 import requests
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.edit import FormMixin
-
 from .models import Rubric, Product, Product_Image, Review
 from django.contrib.auth.forms import UserCreationForm
 from django.views.generic import CreateView, FormView, DeleteView, UpdateView
-from .forms import CreateProductForm, CreateReviewForm
+from .forms import CreateProductForm, CreateReviewForm, FilterProductForm
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
@@ -17,6 +16,9 @@ from cart.cart import Cart
 from cart.forms import ProductAddInCartFrom
 from django.contrib import messages
 from django.shortcuts import redirect
+from django.core.exceptions import PermissionDenied
+from django.db.models import Q
+from decimal import Decimal
 
 def index(request):
     rubrics = Rubric.objects.all()
@@ -24,7 +26,7 @@ def index(request):
     return render(request, 'posts/index.html', {'rubrics': rubrics,
                                                 'products':products})
 
-class CreateProductView(CreateView):
+class CreateProductView(LoginRequiredMixin, CreateView):
     form_class = CreateProductForm
     template_name = 'posts/create-product.html'
 
@@ -87,10 +89,31 @@ def search_product_data(request):
         return HttpResponseRedirect(reverse('posts:index'))
 
 def search_product(request):
-    products = Product.objects.filter(name__icontains=request.GET.get('search_data'))
     rubrics = Rubric.objects.all()
-    return render(request, 'posts/search_product.html', {'rubrics': rubrics,
-                                                'products': products})
+    filterForm = FilterProductForm
+    products = None
+    if request.method == 'GET':
+        filters = FilterProductForm(request.GET)
+
+        if filters.is_valid():
+            price = filters.cleaned_data['price']
+            if not price:
+                price = False
+            products = Product.objects.filter(
+                Q(name__icontains=request.GET.get('search_name', False)) |
+                Q(price__gte=price) &
+                Q(condition=request.GET.get('condition', False)) &
+                Q(sale_type=request.GET.get('sale_type', False)))
+
+        elif request.GET.get('search_name'):
+            products = Product.objects.filter(name__icontains=request.GET.get('search_name', False))
+
+        else:
+            redirect('posts:index')
+
+        return render(request, 'posts/search_product.html', {'rubrics': rubrics,
+                                                             'products': products,
+                                                             'form': filterForm})
 
 @csrf_exempt
 def delete_review(request, review_id):
@@ -108,7 +131,7 @@ class DeleteProductView(DeleteView):
         if self.object.author == self.request.user:
             return super().get()
         else:
-            return redirect('posts:index')
+            raise PermissionDenied()
 
 class UpdateProductView(UpdateView):
     model = Product
@@ -120,7 +143,7 @@ class UpdateProductView(UpdateView):
         if self.object.author == self.request.user:
             return super().get(request, *args, **kwargs)
         else:
-            return redirect('posts:index')
+            raise PermissionDenied()
 
     def get_context_data(self, **kwargs):
         kwargs['characteristics'] = self.object.characteristics.items()

@@ -20,3 +20,10 @@ class CreateReviewForm(forms.ModelForm):
         model = Review
         fields = ['review','content']
         validators = []
+
+class FilterProductForm(forms.ModelForm):
+    price = forms.DecimalField(required=False)
+    class Meta:
+        model = Product
+        fields = ['condition', 'sale_type', 'price']
+

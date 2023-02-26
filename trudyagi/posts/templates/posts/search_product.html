@@ -1,6 +1,18 @@
-{% extends 'posts/base.html' %}
+{% extends 'base.html' %}
 
 {% block content %}
+<div class="filter_form_conteiner">
+    <form method="get" >
+        {% for option in form.condition %}
+        <input name="condition" type="checkbox" value="{{ option }}">
+        {% endfor %}
+        {% for option in form.sale_type %}
+        <input name="sale_type" type="checkbox" value="{{ option }}">
+        {% endfor %}
+        {{ form.price }}
+        <button type="submit">Поиск</button>
+    </form>
+</div>
 <section class="section">
     <div class="name_section">
         <h2>Обьявления по запросу: {{ request.GET.search_data }}</h2>

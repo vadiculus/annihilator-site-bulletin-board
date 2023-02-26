@@ -359,6 +359,7 @@ main .conteiner{
 
 .main_product_info{
 	display: flex;
+	justify-content: space-between;
 }
 
 .product_author_main_info{

@@ -1,4 +1,4 @@
-{% extends 'posts/base_detail.html' %}
+{% extends 'base_detail.html' %}
 {% load static %}
 
 {% block content %}
@@ -75,6 +75,7 @@
                             {% endif %}
                     </h1>
                     <hr>
+                    <span>Состояние: {{ product.condition }}</span>
                     <div class="product_about">
                         <p>{{ product.about }}</p>
                     </div>
