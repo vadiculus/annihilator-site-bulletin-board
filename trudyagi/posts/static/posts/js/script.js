@@ -46,7 +46,7 @@ window.addEventListener('DOMContentLoaded', function(){
                 response['search_data'].forEach(element => {
                 let search_element =document.createElement('a')
                 search_element.innerText = element;
-                search_element.href = 'http://' + window.location.host + '/search-product/?search_data=' + element;
+                search_element.href = 'http://' + window.location.host + '/home_search/?search_name=' + element;
                 search_list.appendChild(search_element);
                 });
             } else {

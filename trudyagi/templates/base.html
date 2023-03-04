@@ -19,7 +19,7 @@
 						<a href="{% url 'posts:index' %}">Annihilator</a>
 						<img width="35" src="{% static 'posts/img/logo.png' %}">
 					</div>
-					<form method="get" action="{% url 'posts:search_product' %}">
+					<form method="get" action="{% url 'posts:home_search' %}">
 						<div class="search_conteiner">
 							<div class="search_box">
 								<input name="search_name" id="search_input" type="text" value="{{ request.GET.search_data }}">

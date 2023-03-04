@@ -19,18 +19,20 @@
 						<a href="{% url 'posts:index' %}">Annihilator</a>
 						<img width="35" src="{% static 'posts/img/logo.png' %}">
 					</div>
-					<div class="search_conteiner">
-						<div class="search_box">
-							<input name="search_data" id="search_input" type="text">
-							<div class="search_list_conteiner" id="search_list_conteiner">
-								<ul id="search_list">
-								</ul>
+					<form method="get" action="{% url 'posts:home_search' %}">
+						<div class="search_conteiner">
+							<div class="search_box">
+								<input name="search_name" id="search_input" type="text" value="{{ request.GET.search_data }}">
+								<div class="search_list_conteiner" id="search_list_conteiner">
+									<ul id="search_list">
+									</ul>
+								</div>
 							</div>
+							<button id="search_btn">
+								<img width="60%" src="{% static 'posts/img/search-icon.png' %}">
+							</button>
 						</div>
-						<button id="search_btn">
-							<img width="60%" src="{% static 'posts/img/search-icon.png' %}">
-						</button>
-					</div>
+					</form>
 					{% if user.is_authenticated %}
 					<div class="account__nav">
 						<div class="nav_img_icon message_icon">

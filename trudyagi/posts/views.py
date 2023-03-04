@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.edit import FormMixin
-from .models import Rubric, Product, Product_Image, Review
+from .models import Rubric, Product, Product_Image, Review, Category
 from django.contrib.auth.forms import UserCreationForm
 from django.views.generic import CreateView, FormView, DeleteView, UpdateView
 from .forms import CreateProductForm, CreateReviewForm, FilterProductForm
@@ -19,6 +19,7 @@ from django.shortcuts import redirect
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from decimal import Decimal
+from .attributes_conf import attributes_config
 
 def index(request):
     rubrics = Rubric.objects.all()
@@ -88,30 +89,42 @@ def search_product_data(request):
     else:
         return HttpResponseRedirect(reverse('posts:index'))
 
-def search_product(request):
-    rubrics = Rubric.objects.all()
-    filterForm = FilterProductForm
+def search_product_home(request):
+    if bool(request.GET.get('search_name')):
+        return HttpResponseRedirect(reverse('posts:search_product_page', args=['list' ,request.GET.get('search_name')]))
+    else:
+        return redirect('posts:index')
+
+def search_product_page(request, category_slug, product_name):
+    search_params_list = {}
+    for attr in request.GET.items():
+        if attr[1]:
+            search_params_list[attr[0]] = attr[1]
+    print(search_params_list)
+    if category_slug == 'list':
+        category = Category.objects.all()
+        filterForm = FilterProductForm()
+    else:
+        category = Category.objects.filter(slug=category_slug)
+        main_category = category[0]
+        filterForm = FilterProductForm(category_name=main_category.name)
     products = None
     if request.method == 'GET':
         filters = FilterProductForm(request.GET)
-
         if filters.is_valid():
             price = filters.cleaned_data['price']
             if not price:
                 price = False
             products = Product.objects.filter(
-                Q(name__icontains=request.GET.get('search_name', False)) |
-                Q(price__gte=price) &
-                Q(condition=request.GET.get('condition', False)) &
-                Q(sale_type=request.GET.get('sale_type', False)))
-
-        elif request.GET.get('search_name'):
-            products = Product.objects.filter(name__icontains=request.GET.get('search_name', False))
+                Q(name__icontains=product_name) &
+                Q(category__in=category) &
+                Q(attributes=search_params_list))
+        #     [{item[0]:item[1]} for item in search_params_list.items()]
 
         else:
             redirect('posts:index')
 
-        return render(request, 'posts/search_product.html', {'rubrics': rubrics,
+    return render(request, 'posts/search_product.html', {'category': category,
                                                              'products': products,
                                                              'form': filterForm})
 
