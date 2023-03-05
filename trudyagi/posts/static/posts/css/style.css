@@ -226,7 +226,7 @@ main .conteiner{
 	position: relative;
 }
 
-#search_input{
+#search_name_input{
 	max-width: 300px;
 	width: 400px;
 	padding: 7px;
@@ -721,4 +721,51 @@ main .conteiner{
 
 .product_info *{
 	margin-bottom: 20px;
+}
+
+/* Search page */
+
+.search_category_conteiner{
+	position: relative;
+	display: flex;
+	align-items: center;
+}
+
+.search_rubric_list{
+	position: absolute;
+	z-index: 1000;
+	top: 100%;
+	left: -2%;
+	background: white;
+	box-shadow: rgba(0,0,0,0.2);
+	border: 1px solid grey;
+}
+
+.choice_category{
+	position: relative;
+	padding: 5px;
+	border: 1px solid grey;
+}
+
+.choice_rubric_conteiner{
+	position: relative;
+	padding: 5px;
+}
+
+.search_categories_list{
+	position: absolute;
+	z-index: 2000;
+	top: -3%;
+	left: 100%;
+	background: white;	
+	border: 1px solid grey;
+}
+
+.choice_span{
+	padding: 5px;
+}
+
+.choice_category_conteiner{
+	position: absolute;
+	padding: 5px;
 }

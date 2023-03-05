@@ -1,11 +1,32 @@
-{% extends 'base.html' %}
+{% extends 'base_detail.html' %}
+{% load static %}
 
 {% block content %}
 <div class="filter_form_conteiner">
-    <form method="get" >
-        {{ form }}
-        <button type="submit">Поиск</button>
-    </form>
+    <div class="white_back_block">
+        <form method="get" id="search_form">
+            <div class="search_category_conteiner">
+                <span>Категория</span>:
+                <div class="choice_category">
+                    {{ category }}
+                    <div class="search_rubric_list">
+                        {% for rubric in rubrics %}
+                        <div class="choice_rubric_conteiner">
+                            <span class="choice_span">{{ rubric.name }}</span>
+                            <div class="search_categories_list">
+                                {% for category in rubric.categories.all %}
+                                <span>{{ category.name }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {{ form }}
+            <button id="search_form_submit_button" type="submit">Поиск</button>
+        </form>
+    </div>
 </div>
 <section class="section">
     <div class="name_section">
@@ -25,7 +46,13 @@
                         </div>
                     </a>
                     <div class="product_icon_price">
-                        <b>{{ product.price }}$</b>
+                        {% if product.sale_type == 's' %}
+                            <b>{{ product.price }}$</b>
+                        {% elif product.sale_type == 'f' %}
+                            <b>Даром</b>
+                        {% elif product.sale_type == 'e' %}
+                            <b>Обмен</b>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -33,4 +60,5 @@
         </div>
     </div>
 </section>
+<script src="{% static 'posts/js/script_search_product.js' %}"></script>
 {% endblock %}

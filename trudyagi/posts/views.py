@@ -97,16 +97,18 @@ def search_product_home(request):
 
 def search_product_page(request, category_slug, product_name):
     search_params_list = {}
+    main_category = False
+    rubrics = Rubric.objects.prefetch_related('categories').all()
     for attr in request.GET.items():
         if attr[1]:
             search_params_list[attr[0]] = attr[1]
-    print(search_params_list)
     if category_slug == 'list':
         category = Category.objects.all()
+        main_category = 'Все'
         filterForm = FilterProductForm()
     else:
         category = Category.objects.filter(slug=category_slug)
-        main_category = category[0]
+        main_category = category[0].name
         filterForm = FilterProductForm(category_name=main_category.name)
     products = None
     if request.method == 'GET':
@@ -115,18 +117,23 @@ def search_product_page(request, category_slug, product_name):
             price = filters.cleaned_data['price']
             if not price:
                 price = False
-            products = Product.objects.filter(
-                Q(name__icontains=product_name) &
-                Q(category__in=category) &
-                Q(attributes=search_params_list))
-        #     [{item[0]:item[1]} for item in search_params_list.items()]
+            if product_name != 'empty':
+                products = Product.objects.filter(
+                    Q(name__icontains=product_name) &
+                    Q(category__in=category))
+            else:
+                products = Product.objects.filter(
+                    Q(category__in=category))
+            if search_params_list:
+                products = products.filter(Q(attributes=search_params_list))
 
         else:
             redirect('posts:index')
 
-    return render(request, 'posts/search_product.html', {'category': category,
-                                                             'products': products,
-                                                             'form': filterForm})
+    return render(request, 'posts/search_product.html', {'rubrics':rubrics,
+                                                        'category': main_category,
+                                                        'products': products,
+                                                        'form': filterForm})
 
 @csrf_exempt
 def delete_review(request, review_id):

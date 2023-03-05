@@ -1,6 +1,6 @@
 window.addEventListener('DOMContentLoaded', function(){
     const messages = document.getElementById('messages');
-    const search_input = this.document.getElementById('search_input');
+    const search_name_input = this.document.getElementById('search_name_input');
     const search_list_conteiner = this.document.getElementById('search_list_conteiner');
     const search_list = this.document.getElementById('search_list');
     const ajax_timeout = 1000;
@@ -57,7 +57,7 @@ window.addEventListener('DOMContentLoaded', function(){
         search_ajax.send(search_data);
     }
 
-    search_input.oninput = function(){
+    search_name_input.oninput = function(){
         if (this.value.length >= 2){
             if (ajax_call_timeout){
                 clearTimeout(ajax_call_timeout);

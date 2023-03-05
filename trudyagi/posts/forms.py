@@ -33,5 +33,5 @@ class FilterProductForm(forms.Form):
         super(FilterProductForm, self).__init__(*args, **kwargs)
 
     class Meta:
-        fields = ['material']
+        fields = '__all__'
 
