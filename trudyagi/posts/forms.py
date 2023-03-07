@@ -26,11 +26,12 @@ class FilterProductForm(forms.Form):
     price = forms.DecimalField(required=False)
     def __init__(self, *args, **kwargs):
         category_attrs = attributes_config.get(kwargs.get('category_name','list'), {})
+        print(category_attrs)
         if kwargs.get('category_name'):
             del kwargs['category_name']
-        for attr in category_attrs.items():
-            self.base_fields[attr[0]] = attr[1]
         super(FilterProductForm, self).__init__(*args, **kwargs)
+        for attr in category_attrs.items():
+            self.fields[attr[0]] = attr[1]
 
     class Meta:
         fields = '__all__'

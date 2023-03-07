@@ -4,18 +4,21 @@
 {% block content %}
 <div class="filter_form_conteiner">
     <div class="white_back_block">
+        <input name="category" id="id_category" type="hidden">
         <form method="get" id="search_form">
             <div class="search_category_conteiner">
                 <span>Категория</span>:
-                <div class="choice_category">
-                    {{ category }}
-                    <div class="search_rubric_list">
+                <div id="choice_category_button" class="choice_category">
+                    <span id="choice_category_button_name">{{ category }}</span>
+                    <div id="search_rubric_list" class="search_rubric_list">
                         {% for rubric in rubrics %}
                         <div class="choice_rubric_conteiner">
                             <span class="choice_span">{{ rubric.name }}</span>
                             <div class="search_categories_list">
                                 {% for category in rubric.categories.all %}
-                                <span>{{ category.name }}</span>
+                                <div class="choice_category_conteiner" data-name="{{ category.name }}" data-slug="{{ category.slug }}">
+                                    <span>{{ category.name }}</span>
+                                </div>
                                 {% endfor %}
                             </div>
                         </div>
@@ -60,5 +63,6 @@
         </div>
     </div>
 </section>
+{{ category_slug|json_script:'slug-data' }}
 <script src="{% static 'posts/js/script_search_product.js' %}"></script>
 {% endblock %}

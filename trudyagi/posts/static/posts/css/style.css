@@ -398,9 +398,7 @@ main .conteiner{
 	box-sizing: border-box;
 }
 
-.active{
-	display: block;
-}
+
 
 .search_box{
 	position: relative;
@@ -732,10 +730,11 @@ main .conteiner{
 }
 
 .search_rubric_list{
+	display: none;
 	position: absolute;
 	z-index: 1000;
 	top: 100%;
-	left: -2%;
+	left: -3%;
 	background: white;
 	box-shadow: rgba(0,0,0,0.2);
 	border: 1px solid grey;
@@ -753,6 +752,7 @@ main .conteiner{
 }
 
 .search_categories_list{
+	display: none;
 	position: absolute;
 	z-index: 2000;
 	top: -3%;
@@ -766,6 +766,9 @@ main .conteiner{
 }
 
 .choice_category_conteiner{
-	position: absolute;
 	padding: 5px;
+}
+
+.active{
+	display: block;
 }

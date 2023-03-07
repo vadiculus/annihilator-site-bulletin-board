@@ -47,6 +47,12 @@ class Product(models.Model):
         ordering = ['-created']
         verbose_name = 'Продукт'
         verbose_name_plural = 'Продукты'
+        indexes = [
+            models.Index(fields=["attributes"]),
+            models.Index(fields=["price"]),
+            models.Index(fields=["name"]),
+            models.Index(fields=["name","attributes"])
+        ]
 
 class Product_Image(models.Model):
     image = models.ImageField(upload_to='products-images/%Y/%m/%d')
