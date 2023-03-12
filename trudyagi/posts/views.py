@@ -20,6 +20,7 @@ from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from decimal import Decimal
 from .attributes_conf import attributes_config
+from django.core.paginator import Paginator
 
 def index(request):
     rubrics = Rubric.objects.all()
@@ -56,7 +57,9 @@ def get_by_rubric(request, rubric_slug):
 def product(request, product_unique_id):
     product = get_object_or_404(Product.objects.prefetch_related('reviews' ,'reviews__author'), pk=product_unique_id)
     cart_form = ProductAddInCartFrom()
-    characteristics = product.characteristics.items()
+    characteristics = None
+    if product.characteristics:
+        characteristics = product.characteristics.items()
 
     if request.method == 'POST':
         form = CreateReviewForm(request.POST)
@@ -67,7 +70,6 @@ def product(request, product_unique_id):
                 review.author = request.user
                 review.product = product
                 review.save()
-
         return HttpResponseRedirect(reverse('posts:product_detail', args=[product_unique_id]))
 
     elif request.method == 'GET':
@@ -81,7 +83,7 @@ def product(request, product_unique_id):
 def search_product_data(request):
     if request.method == 'POST':
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-            search_products = Product.objects.filter(name__icontains=request.POST.get('search_data'))
+            search_products = Product.objects.filter(name__icontains=request.POST.get('search_data'))[:10]
             if search_products:
                 return JsonResponse({'search_data': [prod.name for prod in list(search_products)]})
             else:
@@ -99,16 +101,17 @@ def search_product_page(request, category_slug, product_name):
     search_params_list = {}
     main_category = False
     rubrics = Rubric.objects.prefetch_related('categories').all()
+    page_number = request.GET.get('page', 1)
     for attr_name in request.GET:
         value = request.GET.getlist(attr_name)
-        if value:
+        if value and attr_name != 'page':
             search_params_list[f'attributes__{attr_name}__in'] = value
     if category_slug == 'list':
         category = Category.objects.all()
         main_category = 'Все'
         filterForm = FilterProductForm()
     else:
-        category = Category.objects.filter(slug=category_slug)
+        category = get_object_or_404(Category ,slug=category_slug)
         main_category = category[0].name
         filterForm = FilterProductForm(category_name=main_category)
     products = None
@@ -126,6 +129,8 @@ def search_product_page(request, category_slug, product_name):
             else:
                 products = Product.objects.filter(
                     Q(category__in=category))
+            paginator = Paginator(products, 20)
+            page_obj = paginator.get_page(page_number)
             # if search_params_list:
             #     products = products.filter(Q(**search_params_list))
 
@@ -137,7 +142,8 @@ def search_product_page(request, category_slug, product_name):
                                                         'category': main_category,
                                                         'products': products,
                                                         'form': filterForm,
-                                                        'product_name':product_name})
+                                                        'product_name':product_name,
+                                                        'page_obj': page_obj})
 
 @csrf_exempt
 def delete_review(request, review_id):

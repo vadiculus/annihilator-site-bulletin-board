@@ -27,7 +27,6 @@ window.addEventListener('DOMContentLoaded', function(){
         window.location.href = `http://${window.location.host}/search/${category_choice_input.value ? category_choice_input.value : JSON.parse(category_slug_data.textContent)}/${search_name_input.value.length > 0 ? search_name_input.value: 'empty'}/${new_url.length > 0 ? '?'+ new_url.join('&'): ''}`;        
     })
 
-    console.log(document.getElementsByClassName('choice_rubric_conteiner'));
     for(element of this.document.querySelectorAll('.choice_rubric_conteiner')){
         element.addEventListener('mouseenter', function(event){
             event.preventDefault();
@@ -43,6 +42,36 @@ window.addEventListener('DOMContentLoaded', function(){
             category_choice_input.value = this.dataset.slug
             category_button_name.textContent = this.dataset.name
             window.location.href = `http://${window.location.host}/search/${category_choice_input.value ? category_choice_input.value : JSON.parse(category_slug_data.textContent)}/${search_name_input.value.length > 0 ? search_name_input.value: 'empty'}/`;        
+        })
+    }
+
+    console.log(window.location.href);
+
+    for(element of this.document.getElementsByClassName('paginator_item')){
+        element.addEventListener('click', function(event){
+            let page_attr_found = false;
+            if (window.location.href.includes('?')){
+                let href_list = window.location.href.split(/[?&]/).slice(1);
+                href_list.forEach((attr, idx) => {
+                    if (attr.includes('page')){
+                        let page_attr = attr.split('=');
+                        page_attr[1] = this.dataset.page;
+                        page_attr = page_attr.join('=');
+                        href_list[idx] = page_attr;
+                        window.location.href ='http://' + window.location.host + window.location.pathname + '?' + href_list.join('&');
+                        page_attr_found = true;
+                    }
+                });
+                if (page_attr_found){
+                    console.log('berba');
+                    return;
+                } else {
+                    window.location.href += `&page=${this.dataset.page}`;
+                }
+            }else{
+                window.location.href += `?page=${this.dataset.page}`;
+                return;
+            } 
         })
     }
 

@@ -75,7 +75,14 @@
                             {% endif %}
                     </h1>
                     <hr>
-                    <span>Состояние: {{ product.condition }}</span>
+                    <span>
+                        Состояние:
+                        {% if product.condition == n %}
+                        Новое
+                        {% else %}
+                        Б/у
+                        {% endif %}
+                    </span>
                     <div class="product_about">
                         <p>{{ product.about }}</p>
                     </div>
@@ -181,6 +188,9 @@
         </div>
     </div>
 </div>
-<script src="{% static 'posts/js/script_detail_project.js' %}"></script>
 {{ product.rating|json_script:'product-rating-data' }}
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'posts/js/script_detail_project.js' %}"></script>
 {% endblock %}

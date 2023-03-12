@@ -1,0 +1,12 @@
+#header{
+	background: #363636;
+}
+
+.module h2, .module caption, .inline-group h2{
+	background: #363636;
+}
+
+:root{
+	--primary: #363636;
+	--default-button-bg:#363636;
+}

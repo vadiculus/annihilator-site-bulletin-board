@@ -17,16 +17,15 @@ class CreateProductForm(forms.ModelForm):
         }
 
 class CreateReviewForm(forms.ModelForm):
+    review = forms.IntegerField(label='Оценка',max_value=5, widget=forms.NumberInput())
     class Meta:
         model = Review
         fields = ['review','content']
-        validators = []
 
 class FilterProductForm(forms.Form):
     price = forms.DecimalField(required=False)
     def __init__(self, *args, **kwargs):
         category_attrs = attributes_config.get(kwargs.get('category_name','list'), {})
-        print(category_attrs)
         if kwargs.get('category_name'):
             del kwargs['category_name']
         super(FilterProductForm, self).__init__(*args, **kwargs)

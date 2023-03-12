@@ -37,7 +37,7 @@
     </div>
     <div class="section_content">
         <div class="products_conteiner">
-            {% for product in products %}
+            {% for product in page_obj %}
             <div class="product_icon">
                 <div class="product_icon__content">
                     <a href="{{ product.get_absolute_url }}">
@@ -64,5 +64,8 @@
     </div>
 </section>
 {{ category_slug|json_script:'slug-data' }}
+{% endblock %}
+
+{% block scripts %}
 <script src="{% static 'posts/js/script_search_product.js' %}"></script>
 {% endblock %}
