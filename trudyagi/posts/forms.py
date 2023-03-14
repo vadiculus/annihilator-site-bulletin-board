@@ -1,7 +1,13 @@
 from django import forms
+from django.forms.renderers import get_default_renderer
+from django.forms.utils import ErrorList
+from django.utils.datastructures import MultiValueDict
+
 from .models import Product, Review
 from django.utils.text import slugify
 from .attributes_conf import attributes_config
+import copy
+from django.utils.translation import gettext as _
 
 class CreateProductForm(forms.ModelForm):
     price = forms.DecimalField(label='Цена',max_digits=8, decimal_places=2 ,required=False)
@@ -23,14 +29,15 @@ class CreateReviewForm(forms.ModelForm):
         fields = ['review','content']
 
 class FilterProductForm(forms.Form):
-    price = forms.DecimalField(required=False)
+    max_price = forms.IntegerField(required=False, max_value=99999999)
+    min_price = forms.IntegerField(required=False, min_value=0)
     def __init__(self, *args, **kwargs):
         category_attrs = attributes_config.get(kwargs.get('category_name','list'), {})
         if kwargs.get('category_name'):
             del kwargs['category_name']
         super(FilterProductForm, self).__init__(*args, **kwargs)
-        for attr in category_attrs.items():
-            self.fields[attr[0]] = attr[1]
+        for name, value in category_attrs.items():
+            self.fields[name] = value
 
     class Meta:
         fields = '__all__'

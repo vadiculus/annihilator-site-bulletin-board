@@ -11,6 +11,9 @@
                 <div id="choice_category_button" class="choice_category">
                     <span id="choice_category_button_name">{{ category }}</span>
                     <div id="search_rubric_list" class="search_rubric_list">
+                        <div class="choice_category_conteiner" data-name="Все категории" data-slug="list">
+                            <span>Все категории</span>
+                        </div>
                         {% for rubric in rubrics %}
                         <div class="choice_rubric_conteiner">
                             <span class="choice_span">{{ rubric.name }}</span>
@@ -26,7 +29,7 @@
                     </div>
                 </div>
             </div>
-            {{ form }}
+            {{ form.as_table }}
             <button id="search_form_submit_button" type="submit">Поиск</button>
         </form>
     </div>

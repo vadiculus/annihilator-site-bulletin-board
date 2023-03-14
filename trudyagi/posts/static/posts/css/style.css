@@ -510,13 +510,16 @@ main .conteiner{
 
 .products_conteiner{
 	width: 100%;
+	max-width: 100%;
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
 }
 
 .white_back_block{
 	padding: 30px;
 	background: white;
 	display: inline-block;
-	margin: 0px 20px 0px 20px; 
 	box-shadow: 0 0 15px rgba(0,0,0,0.2);
 }
 
@@ -730,6 +733,12 @@ main .conteiner{
 	position: relative;
 	display: flex;
 	align-items: center;
+}
+
+.filter_form_conteiner .white_back_block{
+	display: flex;
+	width: 100%;
+	box-sizing: border-box;
 }
 
 .search_rubric_list{

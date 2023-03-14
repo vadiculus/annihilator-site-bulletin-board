@@ -36,8 +36,8 @@ class Product(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        if self.sale_type == 'e' or 'f':
-            self.price = None
+        if self.sale_type in ['e', 'f']:
+            self.price = 0
         return super().save(*args, **kwargs)
 
     def get_absolute_url(self):

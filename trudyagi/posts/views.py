@@ -102,37 +102,42 @@ def search_product_page(request, category_slug, product_name):
     main_category = False
     rubrics = Rubric.objects.prefetch_related('categories').all()
     page_number = request.GET.get('page', 1)
-    for attr_name in request.GET:
-        value = request.GET.getlist(attr_name)
-        if value and attr_name != 'page':
-            search_params_list[f'attributes__{attr_name}__in'] = value
+    products = None
     if category_slug == 'list':
         category = Category.objects.all()
-        main_category = 'Все'
+        main_category = 'Все категории'
         filterForm = FilterProductForm()
     else:
-        category = get_object_or_404(Category ,slug=category_slug)
+        category = (get_object_or_404(Category, slug=category_slug),)
         main_category = category[0].name
         filterForm = FilterProductForm(category_name=main_category)
-    products = None
     if request.method == 'GET':
-        filters = FilterProductForm(request.GET)
+        filters = FilterProductForm(request.GET, category_name=category[0].name)
         if filters.is_valid():
-            price = filters.cleaned_data['price']
-            if not price:
-                price = False
+            cd = filters.cleaned_data
+            for attr_name in cd:
+                value = cd.get(attr_name)
+                if value and attr_name not in ['page', 'max_price', 'min_price']:
+                    search_params_list[f'attributes__{attr_name}__in'] = value
+
+            min_price, max_price = request.GET.get('min_price', 0), request.GET.get('max_price', 99999999)
             if product_name != 'empty':
-                products = Product.objects.filter(
-                    Q(name__icontains=product_name) &
-                    Q(category__in=category) &
-                    Q(**search_params_list))
+                if min_price or max_price:
+                    products = Product.objects.filter(
+                        Q(name__icontains=product_name) &
+                        Q(category__in=category) &
+                        Q(price__gte=min_price, price__lte=max_price) &
+                        Q(**search_params_list))
+                else:
+                    products = Product.objects.filter(
+                        Q(name__icontains=product_name) &
+                        Q(category__in=category) &
+                        Q(**search_params_list))
             else:
                 products = Product.objects.filter(
                     Q(category__in=category))
             paginator = Paginator(products, 20)
             page_obj = paginator.get_page(page_number)
-            # if search_params_list:
-            #     products = products.filter(Q(**search_params_list))
 
         else:
             redirect('posts:index')
@@ -159,7 +164,7 @@ class DeleteProductView(DeleteView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         if self.object.author == self.request.user:
-            return super().get()
+            return super().post(request)
         else:
             raise PermissionDenied()
 
