@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import Product, Review, Rubric, Category, Product_Image
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name']
+    search_fields = ['name']
 
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['id', 'name']

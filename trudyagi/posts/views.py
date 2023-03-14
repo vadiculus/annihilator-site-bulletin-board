@@ -83,9 +83,9 @@ def product(request, product_unique_id):
 def search_product_data(request):
     if request.method == 'POST':
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-            search_products = Product.objects.filter(name__icontains=request.POST.get('search_data'))[:10]
+            search_products = Product.objects.filter(name__icontains=request.POST.get('search_data')).order_by('name').distinct('name')[:10]
             if search_products:
-                return JsonResponse({'search_data': [prod.name for prod in list(search_products)]})
+                return JsonResponse({'search_data': [prod.name for prod in search_products]})
             else:
                 return JsonResponse({'search_data': False})
     else:
@@ -112,30 +112,25 @@ def search_product_page(request, category_slug, product_name):
         main_category = category[0].name
         filterForm = FilterProductForm(category_name=main_category)
     if request.method == 'GET':
-        filters = FilterProductForm(request.GET, category_name=category[0].name)
+        filters = FilterProductForm(request.GET, category_name=main_category)
         if filters.is_valid():
             cd = filters.cleaned_data
-            for attr_name in cd:
-                value = cd.get(attr_name)
-                if value and attr_name not in ['page', 'max_price', 'min_price']:
-                    search_params_list[f'attributes__{attr_name}__in'] = value
-
+            for attr_name in cd.keys():
+                if attr_name not in ['min_price', 'max_price']:
+                    value = cd.get(attr_name)
+                    if value:
+                        search_params_list[f'attributes__{attr_name}__in'] = value
             min_price, max_price = request.GET.get('min_price', 0), request.GET.get('max_price', 99999999)
             if product_name != 'empty':
-                if min_price or max_price:
-                    products = Product.objects.filter(
-                        Q(name__icontains=product_name) &
-                        Q(category__in=category) &
-                        Q(price__gte=min_price, price__lte=max_price) &
-                        Q(**search_params_list))
-                else:
-                    products = Product.objects.filter(
-                        Q(name__icontains=product_name) &
-                        Q(category__in=category) &
-                        Q(**search_params_list))
+                products = Product.objects.filter(
+                    Q(name__icontains=product_name) &
+                    Q(category__in=category) &
+                    Q(price__gte=min_price, price__lte=max_price) &
+                    Q(**search_params_list))
             else:
                 products = Product.objects.filter(
-                    Q(category__in=category))
+                    Q(category__in=category) &
+                    Q(**search_params_list))
             paginator = Paginator(products, 20)
             page_obj = paginator.get_page(page_number)
 

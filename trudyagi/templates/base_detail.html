@@ -89,6 +89,11 @@
 					<div class="paginator_item" data-page="{{ page_obj.previous_page_number }}">
 						<span><</span>
 					</div>
+
+					<div class="paginator_item" data-page="1">
+						<span>1</span>
+					</div>
+					<span>...</span>
 					{% endif %}
 					{% for page in page_obj.paginator.page_range %}
 					{% if page >= page_obj.number|add:-1 and page <= page_obj.number|add:1 %}
@@ -99,6 +104,10 @@
 					{% endif %}
 					{% endfor %}
 					{% if page_obj.has_next %}
+					<span>...</span>
+					<div class="paginator_item" data-page="{{ page_obj.paginator.num_pages }}">
+						<span>{{ page_obj.paginator.num_pages }}</span>
+					</div>
 					<div class="paginator_item" data-page="{{ page_obj.next_page_number }}">
 						<span> > </span>
 					</div>

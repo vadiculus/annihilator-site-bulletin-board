@@ -36,10 +36,11 @@
 </div>
 <section class="section">
     <div class="name_section">
-        <h2>Обьявления по запросу: {{ request.GET.search_data }}</h2>
+        <h3>Обьявления по запросу: {{ request.GET.search_data }}</h3>
     </div>
     <div class="section_content">
         <div class="products_conteiner">
+            {% if page_obj %}
             {% for product in page_obj %}
             <div class="product_icon">
                 <div class="product_icon__content">
@@ -63,6 +64,9 @@
                 </div>
             </div>
             {% endfor %}
+            {% else %}
+            <h2>Не найдено продуктов по вашему запросу</h2>
+            {% endif %}
         </div>
     </div>
 </section>
