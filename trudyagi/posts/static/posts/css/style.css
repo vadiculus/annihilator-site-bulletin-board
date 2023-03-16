@@ -729,10 +729,14 @@ main .conteiner{
 
 /* Search page */
 
+#search_form .field_set{
+	display: flex;
+	flex-wrap: wrap;
+}
+
 .search_category_conteiner{
 	position: relative;
 	display: flex;
-	align-items: center;
 }
 
 .filter_form_conteiner .white_back_block{
@@ -753,6 +757,7 @@ main .conteiner{
 }
 
 .choice_category{
+	display: inline-block;
 	position: relative;
 	padding: 5px;
 	border: 1px solid grey;
@@ -784,6 +789,10 @@ main .conteiner{
 
 .active{
 	display: block;
+}
+
+.search_form__field{
+	margin-right: 10px;
 }
 
 /* Pagination */

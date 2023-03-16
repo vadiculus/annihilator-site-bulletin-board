@@ -6,7 +6,7 @@
     <div class="white_back_block">
         <input name="category" id="id_category" type="hidden">
         <form method="get" id="search_form">
-            <div class="search_category_conteiner">
+            <div class="search_category_conteiner search_form__field">
                 <span>Категория</span>:
                 <div id="choice_category_button" class="choice_category">
                     <span id="choice_category_button_name">{{ category }}</span>
@@ -29,7 +29,17 @@
                     </div>
                 </div>
             </div>
-            {{ form.as_table }}
+            <div class="field_set">
+                {% for elem in form %}
+                <div class="search_form__field">
+                    <label>{{ elem.label }}</label><br>
+                    {% with value=elem.value %}
+                    {% endwith %}
+                    {{ elem }}
+                </div>
+                {% endfor %}
+            </div>
+            <br>
             <button id="search_form_submit_button" type="submit">Поиск</button>
         </form>
     </div>

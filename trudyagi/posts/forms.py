@@ -29,9 +29,20 @@ class CreateReviewForm(forms.ModelForm):
         fields = ['review','content']
 
 class FilterProductForm(forms.Form):
+    PRODUCT_CONDITION_CHOICE = (
+        ('n', 'Новый'),
+        ('u', 'Б/у'),
+    )
+    SALE_TYPE_CHOICE = (
+        ('s', 'Продажа'),
+        ('e', 'Обмен'),
+        ('f', 'Даром')
+    )
     max_price = forms.IntegerField(required=False, max_value=99999999)
     min_price = forms.IntegerField(required=False, min_value=0)
-    def __init__(self, *args, **kwargs):
+    condition = forms.MultipleChoiceField(required=False,choices=PRODUCT_CONDITION_CHOICE, widget=forms.CheckboxSelectMultiple)
+    sale_type = forms.MultipleChoiceField(required=False,choices=SALE_TYPE_CHOICE, widget=forms.CheckboxSelectMultiple)
+    def __init__(self, category_name=None, *args, **kwargs):
         category_attrs = attributes_config.get(kwargs.get('category_name','list'), {})
         if kwargs.get('category_name'):
             del kwargs['category_name']

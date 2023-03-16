@@ -57,9 +57,6 @@ def get_by_rubric(request, rubric_slug):
 def product(request, product_unique_id):
     product = get_object_or_404(Product.objects.prefetch_related('reviews' ,'reviews__author'), pk=product_unique_id)
     cart_form = ProductAddInCartFrom()
-    characteristics = None
-    if product.characteristics:
-        characteristics = product.characteristics.items()
 
     if request.method == 'POST':
         form = CreateReviewForm(request.POST)
@@ -76,8 +73,7 @@ def product(request, product_unique_id):
         rubrics = Rubric.objects.all()
         return render(request, 'posts/detail-product.html', {'rubrics':rubrics,'product':product,
                                                             'review_form': CreateReviewForm,
-                                                            'cart_form':cart_form,
-                                                             'characteristics':characteristics,})
+                                                            'cart_form':cart_form})
 
 @csrf_exempt
 def search_product_data(request):
@@ -106,44 +102,43 @@ def search_product_page(request, category_slug, product_name):
     if category_slug == 'list':
         category = Category.objects.all()
         main_category = 'Все категории'
-        filterForm = FilterProductForm()
     else:
         category = (get_object_or_404(Category, slug=category_slug),)
         main_category = category[0].name
-        filterForm = FilterProductForm(category_name=main_category)
     if request.method == 'GET':
-        filters = FilterProductForm(request.GET, category_name=main_category)
-        if filters.is_valid():
-            cd = filters.cleaned_data
+        filterForm = FilterProductForm(data=request.GET, category_name=main_category)
+        if filterForm.is_valid():
+            cd = filterForm.cleaned_data
             for attr_name in cd.keys():
-                if attr_name not in ['min_price', 'max_price']:
+                if attr_name not in filterForm.base_fields.keys():
                     value = cd.get(attr_name)
                     if value:
                         search_params_list[f'attributes__{attr_name}__in'] = value
-            min_price, max_price = request.GET.get('min_price', 0), request.GET.get('max_price', 99999999)
             if product_name != 'empty':
                 products = Product.objects.filter(
-                    Q(name__icontains=product_name) &
-                    Q(category__in=category) &
-                    Q(price__gte=min_price, price__lte=max_price) &
-                    Q(**search_params_list))
+                    Q(name__icontains=product_name,
+                      category__in=category,
+                      price__gte=request.GET.get('min_price', 0),
+                      price__lte=request.GET.get('max_price', 99999999),
+                      condition__in=request.GET.getlist('condition', ['n', 'u']),
+                      sale_type__in = request.GET.getlist('sale_type', ['s','e','f']),
+                      **search_params_list))
             else:
                 products = Product.objects.filter(
-                    Q(category__in=category) &
-                    Q(**search_params_list))
+                    Q(category__in=category, **search_params_list))
+
             paginator = Paginator(products, 20)
             page_obj = paginator.get_page(page_number)
-
+            return render(request, 'posts/search_product.html', {'rubrics': rubrics,
+                                                                 'category_slug': category_slug,
+                                                                 'category': main_category,
+                                                                 'products': products,
+                                                                 'form': filterForm,
+                                                                 'product_name': product_name,
+                                                                 'page_obj': page_obj
+                                                                 })
         else:
             redirect('posts:index')
-
-    return render(request, 'posts/search_product.html', {'rubrics':rubrics,
-                                                        'category_slug':category_slug,
-                                                        'category': main_category,
-                                                        'products': products,
-                                                        'form': filterForm,
-                                                        'product_name':product_name,
-                                                        'page_obj': page_obj})
 
 @csrf_exempt
 def delete_review(request, review_id):
@@ -174,10 +169,6 @@ class UpdateProductView(UpdateView):
             return super().get(request, *args, **kwargs)
         else:
             raise PermissionDenied()
-
-    def get_context_data(self, **kwargs):
-        kwargs['characteristics'] = self.object.characteristics.items()
-        return super().get_context_data(**kwargs)
 
     def get_success_url(self):
         return reverse('posts:product_detail', args=[self.get_object().id])
