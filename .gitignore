@@ -1,3 +1,4 @@
 trudyagi/trudyagi/config.py
 trudyagi/db.sqlite3
 trudyagi/media
+__pycache__/
