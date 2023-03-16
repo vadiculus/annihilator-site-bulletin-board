@@ -75,26 +75,17 @@
                             {% endif %}
                     </h1>
                     <hr>
-                    <span>Состояние: {{ product.condition }}</span>
+                    <span>
+                        Состояние:
+                        {% if product.condition == n %}
+                        Новое
+                        {% else %}
+                        Б/у
+                        {% endif %}
+                    </span>
                     <div class="product_about">
                         <p>{{ product.about }}</p>
                     </div>
-                </div>
-                <div class="product_characteristics">
-                    {% if characteristics %}
-                    <table class="product_characteristics_table">
-                        <tr class="table_characteristics_titles">
-                            <th>Харектеристики</th>
-                            <th>Значения</th>
-                        </tr>
-                        {% for char_list in characteristics %}
-                        <tr>
-                            <td>{{ char_list.0 }}</td>
-                            <td>{{ char_list.1 }}</td>
-                        </tr>
-                        {% endfor %}
-                    </table>
-                    {% endif %}
                 </div>
             </div>
             <div class="product_any_info_conteiner">
@@ -181,6 +172,9 @@
         </div>
     </div>
 </div>
-<script src="{% static 'posts/js/script_detail_project.js' %}"></script>
 {{ product.rating|json_script:'product-rating-data' }}
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'posts/js/script_detail_project.js' %}"></script>
 {% endblock %}

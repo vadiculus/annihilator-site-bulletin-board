@@ -26,7 +26,6 @@ class Product(models.Model):
     sale_type = models.CharField(max_length=5, default='s', choices=SALE_TYPE_CHOICE, verbose_name='Тип продажи')
     price = models.DecimalField(null=True,max_digits=8,decimal_places=2, verbose_name='Цена')
     attributes = models.JSONField(null=True, blank=True,verbose_name='Характеристики')
-    characteristics = models.JSONField(null=True, blank=True,verbose_name='Дополнительные характеристики')
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор', related_name='products')
     category = models.ForeignKey('Category', null=True, on_delete=models.PROTECT, verbose_name='Категория', related_name='products')
     rating = models.FloatField(null=True, blank=True, verbose_name='Рейтинг', validators=[MaxValueValidator(5), MinValueValidator(0)])
@@ -36,8 +35,8 @@ class Product(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        if self.sale_type == 'e' or 'f':
-            self.price = None
+        if self.sale_type in ['e', 'f']:
+            self.price = 0
         return super().save(*args, **kwargs)
 
     def get_absolute_url(self):
@@ -47,6 +46,12 @@ class Product(models.Model):
         ordering = ['-created']
         verbose_name = 'Продукт'
         verbose_name_plural = 'Продукты'
+        indexes = [
+            models.Index(fields=["attributes"]),
+            models.Index(fields=["price"]),
+            models.Index(fields=["name"]),
+            models.Index(fields=["name","attributes"])
+        ]
 
 class Product_Image(models.Model):
     image = models.ImageField(upload_to='products-images/%Y/%m/%d')

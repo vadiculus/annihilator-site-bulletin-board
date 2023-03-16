@@ -22,8 +22,9 @@ def cart_add(request, product_id):
     form = ProductAddInCartFrom(request.POST)
     if form.is_valid():
         cd = form.cleaned_data
+        print(cd.get('quantity', 1))
         cart.add(product=product,
-                 quantity=cd['quantity'],
+                 quantity=cd.get('quantity', 1),
                  update_quantity=cd['update'])
 
     return HttpResponseRedirect(product.get_absolute_url())

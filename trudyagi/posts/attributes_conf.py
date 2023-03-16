@@ -29,7 +29,7 @@ RAM_CHOICES = (
 attributes_config={
     'Обувь':{
         'Материал': forms.MultipleChoiceField(label='Материал',required=False, choices=MATERIAL_CHOICES,
-                                              widget=forms.CheckboxSelectMultiple),
+                                              widget=forms.CheckboxSelectMultiple, initial=True),
         'Размер': forms.IntegerField(label='Размер',required=False),
         'Цвет': forms.MultipleChoiceField(label='Цвет',required=False, choices=COLOR_CHOISE,
                                               widget=forms.CheckboxSelectMultiple),

@@ -22,7 +22,7 @@
 					<form method="get" action="{% url 'posts:home_search' %}">
 						<div class="search_conteiner">
 							<div class="search_box">
-								<input name="search_name" id="search_input" type="text" value="{{ request.GET.search_data }}">
+								<input name="search_name" id="search_name_input" type="text" value="{{ product_name }}">
 								<div class="search_list_conteiner" id="search_list_conteiner">
 									<ul id="search_list">
 									</ul>
@@ -83,9 +83,42 @@
 			<div class="main__inner">
 				{% block content %}
 				{% endblock %}
+				{% if page_obj %}
+				<div class="paginator_list">
+					{% if page_obj.has_previous %}
+					<div class="paginator_item" data-page="{{ page_obj.previous_page_number }}">
+						<span><</span>
+					</div>
+
+					<div class="paginator_item" data-page="1">
+						<span>1</span>
+					</div>
+					<span>...</span>
+					{% endif %}
+					{% for page in page_obj.paginator.page_range %}
+					{% if page >= page_obj.number|add:-1 and page <= page_obj.number|add:1 %}
+					<div class="paginator_item" data-page="{{ page }}">
+						<span>{{ page }}</span>
+					</div>
+<!--					<a href="?page={{ page }}">{{ page }}</a>-->
+					{% endif %}
+					{% endfor %}
+					{% if page_obj.has_next %}
+					<span>...</span>
+					<div class="paginator_item" data-page="{{ page_obj.paginator.num_pages }}">
+						<span>{{ page_obj.paginator.num_pages }}</span>
+					</div>
+					<div class="paginator_item" data-page="{{ page_obj.next_page_number }}">
+						<span> > </span>
+					</div>
+					{% endif %}
+				</div>
+				{% endif %}
 			</div>
 		</div>
 	</main>
 	<script src="{% static 'posts/js/script.js' %}"></script>
+	{% block scripts %}
+	{% endblock %}
 </body>
 </html>

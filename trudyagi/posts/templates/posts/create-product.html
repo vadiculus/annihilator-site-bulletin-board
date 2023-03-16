@@ -22,25 +22,12 @@
         </div>
         {% csrf_token %}
         {{ form.as_table }}
-        <div class="table_conteiner">
-            <table id="characteristics_table">
-                <tr class="table_titles">
-                    <th>Характеристика</th>
-                    <th>Значение</th>
-                </tr>
-                <tr>
-                    <td><input type="text"></td>
-                    <td><input type="text"></td>
-                </tr>
-            </table>
-            <div class="table_btn_list">
-                <button type="button" id="add_char">Добавить</button>
-                <button type="button" id="remove_char">Удалить</button>
-            </div>
-        </div>
         <br>
         <button class="blue_btn" type="submit" id="create_submit_btn">Добавить продукт</button>
     </form>
 </div>
+{% endblock %}
+
+{% block scripts %}
 <script src="{% static 'posts/js/script_create_product.js' %}"></script>
 {% endblock %}

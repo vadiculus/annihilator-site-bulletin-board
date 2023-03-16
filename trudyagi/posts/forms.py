@@ -1,7 +1,13 @@
 from django import forms
+from django.forms.renderers import get_default_renderer
+from django.forms.utils import ErrorList
+from django.utils.datastructures import MultiValueDict
+
 from .models import Product, Review
 from django.utils.text import slugify
 from .attributes_conf import attributes_config
+import copy
+from django.utils.translation import gettext as _
 
 class CreateProductForm(forms.ModelForm):
     price = forms.DecimalField(label='Цена',max_digits=8, decimal_places=2 ,required=False)
@@ -17,21 +23,33 @@ class CreateProductForm(forms.ModelForm):
         }
 
 class CreateReviewForm(forms.ModelForm):
+    review = forms.IntegerField(label='Оценка',max_value=5, widget=forms.NumberInput())
     class Meta:
         model = Review
         fields = ['review','content']
-        validators = []
 
 class FilterProductForm(forms.Form):
-    price = forms.DecimalField(required=False)
-    def __init__(self, *args, **kwargs):
+    PRODUCT_CONDITION_CHOICE = (
+        ('n', 'Новый'),
+        ('u', 'Б/у'),
+    )
+    SALE_TYPE_CHOICE = (
+        ('s', 'Продажа'),
+        ('e', 'Обмен'),
+        ('f', 'Даром')
+    )
+    max_price = forms.IntegerField(required=False, max_value=99999999)
+    min_price = forms.IntegerField(required=False, min_value=0)
+    condition = forms.MultipleChoiceField(required=False,choices=PRODUCT_CONDITION_CHOICE, widget=forms.CheckboxSelectMultiple)
+    sale_type = forms.MultipleChoiceField(required=False,choices=SALE_TYPE_CHOICE, widget=forms.CheckboxSelectMultiple)
+    def __init__(self, category_name=None, *args, **kwargs):
         category_attrs = attributes_config.get(kwargs.get('category_name','list'), {})
         if kwargs.get('category_name'):
             del kwargs['category_name']
-        for attr in category_attrs.items():
-            self.base_fields[attr[0]] = attr[1]
         super(FilterProductForm, self).__init__(*args, **kwargs)
+        for name, value in category_attrs.items():
+            self.fields[name] = value
 
     class Meta:
-        fields = ['material']
+        fields = '__all__'
 

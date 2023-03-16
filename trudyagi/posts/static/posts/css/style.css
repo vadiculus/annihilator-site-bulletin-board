@@ -226,7 +226,7 @@ main .conteiner{
 	position: relative;
 }
 
-#search_input{
+#search_name_input{
 	max-width: 300px;
 	width: 400px;
 	padding: 7px;
@@ -398,8 +398,9 @@ main .conteiner{
 	box-sizing: border-box;
 }
 
-.active{
-	display: block;
+#search_list{
+	display: flex;
+	flex-direction: column;
 }
 
 .search_box{
@@ -509,13 +510,16 @@ main .conteiner{
 
 .products_conteiner{
 	width: 100%;
+	max-width: 100%;
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
 }
 
 .white_back_block{
 	padding: 30px;
 	background: white;
 	display: inline-block;
-	margin: 0px 20px 0px 20px; 
 	box-shadow: 0 0 15px rgba(0,0,0,0.2);
 }
 
@@ -721,4 +725,89 @@ main .conteiner{
 
 .product_info *{
 	margin-bottom: 20px;
+}
+
+/* Search page */
+
+#search_form .field_set{
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.search_category_conteiner{
+	position: relative;
+	display: flex;
+}
+
+.filter_form_conteiner .white_back_block{
+	display: flex;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.search_rubric_list{
+	display: none;
+	position: absolute;
+	z-index: 1000;
+	top: 100%;
+	left: -3%;
+	background: white;
+	box-shadow: rgba(0,0,0,0.2);
+	border: 1px solid grey;
+}
+
+.choice_category{
+	display: inline-block;
+	position: relative;
+	padding: 5px;
+	border: 1px solid grey;
+	cursor: pointer;
+}
+
+.choice_rubric_conteiner{
+	position: relative;
+	padding: 5px;
+}
+
+.search_categories_list{
+	display: none;
+	position: absolute;
+	z-index: 2000;
+	top: -3%;
+	left: 100%;
+	background: white;	
+	border: 1px solid grey;
+}
+
+.choice_span{
+	padding: 5px;
+}
+
+.choice_category_conteiner{
+	padding: 5px;
+}
+
+.active{
+	display: block;
+}
+
+.search_form__field{
+	margin-right: 10px;
+}
+
+/* Pagination */
+
+.paginator_item{
+	padding: 5px;
+	margin-right: 5px;
+	cursor: pointer;
+}
+
+.paginator_item:hover{
+	border: 1px solid grey;
+	border-radius: 100%;
+}
+
+.paginator_list{
+	display: flex;
 }

@@ -1,19 +1,57 @@
-{% extends 'base.html' %}
+{% extends 'base_detail.html' %}
+{% load static %}
 
 {% block content %}
 <div class="filter_form_conteiner">
-    <form method="get" >
-        {{ form }}
-        <button type="submit">Поиск</button>
-    </form>
+    <div class="white_back_block">
+        <input name="category" id="id_category" type="hidden">
+        <form method="get" id="search_form">
+            <div class="search_category_conteiner search_form__field">
+                <span>Категория</span>:
+                <div id="choice_category_button" class="choice_category">
+                    <span id="choice_category_button_name">{{ category }}</span>
+                    <div id="search_rubric_list" class="search_rubric_list">
+                        <div class="choice_category_conteiner" data-name="Все категории" data-slug="list">
+                            <span>Все категории</span>
+                        </div>
+                        {% for rubric in rubrics %}
+                        <div class="choice_rubric_conteiner">
+                            <span class="choice_span">{{ rubric.name }}</span>
+                            <div class="search_categories_list">
+                                {% for category in rubric.categories.all %}
+                                <div class="choice_category_conteiner" data-name="{{ category.name }}" data-slug="{{ category.slug }}">
+                                    <span>{{ category.name }}</span>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="field_set">
+                {% for elem in form %}
+                <div class="search_form__field">
+                    <label>{{ elem.label }}</label><br>
+                    {% with value=elem.value %}
+                    {% endwith %}
+                    {{ elem }}
+                </div>
+                {% endfor %}
+            </div>
+            <br>
+            <button id="search_form_submit_button" type="submit">Поиск</button>
+        </form>
+    </div>
 </div>
 <section class="section">
     <div class="name_section">
-        <h2>Обьявления по запросу: {{ request.GET.search_data }}</h2>
+        <h3>Обьявления по запросу: {{ request.GET.search_data }}</h3>
     </div>
     <div class="section_content">
         <div class="products_conteiner">
-            {% for product in products %}
+            {% if page_obj %}
+            {% for product in page_obj %}
             <div class="product_icon">
                 <div class="product_icon__content">
                     <a href="{{ product.get_absolute_url }}">
@@ -25,12 +63,26 @@
                         </div>
                     </a>
                     <div class="product_icon_price">
-                        <b>{{ product.price }}$</b>
+                        {% if product.sale_type == 's' %}
+                            <b>{{ product.price }}$</b>
+                        {% elif product.sale_type == 'f' %}
+                            <b>Даром</b>
+                        {% elif product.sale_type == 'e' %}
+                            <b>Обмен</b>
+                        {% endif %}
                     </div>
                 </div>
             </div>
             {% endfor %}
+            {% else %}
+            <h2>Не найдено продуктов по вашему запросу</h2>
+            {% endif %}
         </div>
     </div>
 </section>
+{{ category_slug|json_script:'slug-data' }}
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'posts/js/script_search_product.js' %}"></script>
 {% endblock %}

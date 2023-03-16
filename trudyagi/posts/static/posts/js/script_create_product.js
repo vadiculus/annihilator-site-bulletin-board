@@ -28,10 +28,6 @@ window.addEventListener('DOMContentLoaded', function(){
         }
     });
 
-    this.document.getElementById('add_char').addEventListener('click' ,function(){
-        characteristics_table.insertAdjacentHTML('beforeend', '<tr><td class="characteristic_input"><input type="text"></td><td class="value_input"><input type="text"></td></tr>');
-    });
-
     this.document.getElementById('create_submit_btn').addEventListener('click', function(){
         for (const tr of characteristics_table.children){
             if (!tr.classList.contains('table_titles')){
