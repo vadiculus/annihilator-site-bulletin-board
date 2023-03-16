@@ -54,7 +54,6 @@
             <div class="product_any_info_conteiner">
                 <div class="product_info">
                     <span>Было выставлено: {{ product.created }}</span>
-                    <br>
 <!--                    <div class="product_rating">-->
 <!--                        {% if product.rating %}-->
 <!--                        <div class="star_rating">-->
@@ -66,13 +65,13 @@
 <!--                    </div>-->
                     <h2>{{ product.name }}</h2>
                     <h1>
-                        {% if product.price %}
+                        {% if product.sale_type == 's' %}
                                 {{ product.price }}$
-                            {% elif product.price == f %}
+                        {% elif product.sale_type == 'f' %}
                                 Даром
-                            {% elif product.price == e %}
+                        {% elif product.sale_type == 'e' %}
                                 Обмен
-                            {% endif %}
+                        {% endif %}
                     </h1>
                     <hr>
                     <span>

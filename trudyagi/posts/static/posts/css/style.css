@@ -811,3 +811,19 @@ main .conteiner{
 .paginator_list{
 	display: flex;
 }
+
+/* Profile */
+
+.profile_settings{
+	background: white;
+	display: flex;
+	width: 100%;
+	box-shadow: 0 0 15px rgba(0,0,0,0.2);
+	padding: 30px;
+	justify-content: space-around;
+	box-sizing: border-box;
+}
+
+.page_form_content{
+	padding: 0 0 30px 0;
+}

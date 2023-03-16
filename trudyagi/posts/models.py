@@ -24,7 +24,7 @@ class Product(models.Model):
     about = models.TextField(null=True, blank=True, verbose_name='О продукте')
     condition = models.CharField(max_length=5, default='n', choices=PRODUCT_CONDITION_CHOICE, verbose_name='Состояние товара')
     sale_type = models.CharField(max_length=5, default='s', choices=SALE_TYPE_CHOICE, verbose_name='Тип продажи')
-    price = models.DecimalField(null=True,max_digits=8,decimal_places=2, verbose_name='Цена')
+    price = models.DecimalField(blank=True,default=0,max_digits=8,decimal_places=2, verbose_name='Цена')
     attributes = models.JSONField(null=True, blank=True,verbose_name='Характеристики')
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор', related_name='products')
     category = models.ForeignKey('Category', null=True, on_delete=models.PROTECT, verbose_name='Категория', related_name='products')

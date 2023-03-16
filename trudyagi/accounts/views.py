@@ -15,6 +15,7 @@ from .utilites import signer
 from django.contrib.auth.views import PasswordChangeView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .tasks import send_activation_email_task
+from django.contrib.auth.decorators import login_required
 
 class RegisterView(CreateView):
     form_class = RegistrationForm
@@ -39,10 +40,6 @@ def logout_user(request):
     logout(request)
     return HttpResponseRedirect(reverse('posts:index'))
 
-def my_profile_view(request):
-    if request.user.profile:
-        return render(request, 'accounts/no_profile')
-
 def profile_view(request, username):
     user = User.objects.prefetch_related('products').get(username=username)
     return render(request, 'accounts/profile.html', {'profile_user':user})
@@ -64,4 +61,23 @@ def resend_activation(request, sign):
     user = User.objects.get(username=signer.unsign(sign))
     send_activation_email_task.delay(user.email, user.username)
     return HttpResponseRedirect(reverse('accounts:activation_warning', args=[sign]))
+
+@login_required
+def change_email(request):
+    errors = []
+    if request.method == 'POST':
+        print(request.POST.get('new_email'))
+        request.user.email = request.POST.get('new_email')
+        request.user.save()
+        return redirect('posts:index')
+    return render(request, 'accounts/change_email.html', {'errors':errors})
+
+def change_contact_email(request):
+    errors = []
+    if request.method == 'POST':
+        print(request.POST.get('new_email'))
+        request.user.contacts = request.POST.get('new_email')
+        request.user.save()
+        return redirect('posts:index')
+    return render(request, 'accounts/change_contact_email.html', {'errors':errors})
 

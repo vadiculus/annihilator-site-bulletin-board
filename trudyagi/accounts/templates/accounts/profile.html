@@ -3,7 +3,7 @@
 
 {% block content %}
 <div class="profile_conteiner">
-    <div class="profile_image">
+    <div class="profile_window">
         <div style="height: 150px;
             width: 150px;background:url(
             {% if profile_user.icon %}
@@ -14,11 +14,31 @@
             ) center;
             background-size: 100%;" class="profile_image">
         </div>
-    </div>
-    <div class="profile_name">
-        <h1>{{ profile_user.first_name }} {{ profile_user.last_name }}</h1>
+        <div class="profile_name">
+            <h1>{{ profile_user.first_name }} {{ profile_user.last_name }}</h1>
+        </div>
     </div>
 </div>
+{% if user == profile_user %}
+<section class="section">
+    <div class="name_section">
+        <h2>Настройки</h2>
+    </div>
+    <div class="section_content">
+        <div class="profile_settings">
+            <div class="profile_settings_tab">
+                <a href="{% url 'accounts:change_password' %}">Изменить пароль</a>
+            </div>
+            <div class="profile_settings_tab">
+                <a href="{% url 'accounts:change_contact_email' %}">Изменить контактный email</a>
+            </div>
+            <div class="profile_settings_tab">
+                <a href="{% url 'accounts:change_email' %}">Изменить email</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
 <section class="section">
     <div class="name_section">
         <h2>Объявления</h2>

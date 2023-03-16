@@ -1,0 +1,18 @@
+{% extends 'base_detail.html' %}
+
+{% block content %}
+<div class="page_form">
+    <div class="page_form_tabs">
+        <div class="form_header">
+            <h1>Изменение контактный email</h1>
+        </div>
+        <div class="page_form_content">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <label>Новый email:</label><br><input name="new_email" type="email"><br>
+                <button>Изменить email</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
