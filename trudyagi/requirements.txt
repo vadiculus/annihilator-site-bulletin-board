@@ -1,3 +1,6 @@
 channels==4.0.0
 Django==4.0.2
 requests==2.18.4
+django-silk==0.5.2
+celery==5.2.7
+psycopg2==2.9.5
