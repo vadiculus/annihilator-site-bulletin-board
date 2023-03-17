@@ -42,7 +42,6 @@ window.addEventListener('DOMContentLoaded', function(){
 
     document.querySelector('.delete_review_btn').addEventListener('click', function(){
         const removal_question = document.getElementById('removal_question');
-        console.log(removal_question);
         removal_question.style.display = 'block';
     })
     

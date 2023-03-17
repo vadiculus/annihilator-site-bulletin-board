@@ -45,8 +45,6 @@ window.addEventListener('DOMContentLoaded', function(){
         })
     }
 
-    console.log(window.location.href);
-
     for(element of this.document.getElementsByClassName('paginator_item')){
         element.addEventListener('click', function(event){
             let page_attr_found = false;
@@ -63,7 +61,6 @@ window.addEventListener('DOMContentLoaded', function(){
                     }
                 });
                 if (page_attr_found){
-                    console.log('berba');
                     return;
                 } else {
                     window.location.href += `&page=${this.dataset.page}`;
