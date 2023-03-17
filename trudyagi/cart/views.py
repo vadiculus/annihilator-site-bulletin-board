@@ -58,4 +58,5 @@ def send_order(request):
 def requests_to_order(request):
     if request.user:
         orders = Order.objects.filter(seller=request.user)
+
     return render(request, 'cart/orders_messages.html', {'orders':orders})
